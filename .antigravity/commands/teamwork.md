@@ -55,9 +55,29 @@ Nenhuma entrega de sprint é finalizada sem exibir os selos de validação cruza
 
 ---
 
-## 3. Roteiro de Execução em 3 Sprints Interativas
+## 3. Roteiro de Execução: Greenfield (Novo) vs. Brownfield (Auditoria de Existente)
 
-Para manter clareza mental, economia de contexto e controle do usuário, execute o `/teamwork` em **3 Sprints Sequenciais com Pausa para Aprovação**:
+O `/teamwork` detecta ou pergunta o contexto de atuação:
+
+### 🌟 Cenário A: Criação de Projeto Novo (Greenfield)
+Execute o ciclo em 3 Sprints Sequenciais com Pausa para Aprovação:
+- **Sprint 1:** `@PM` (PRD) $\rightarrow$ `@Designer` (`DESIGN.md`) $\rightarrow$ `@Coord` (`PROJECT_MAP.md` inicial + BDD) $\rightarrow$ `@DBA` (DDL Postgres 17) $\rightarrow$ `@AppSec` (STRIDE).
+- **Sprint 2:** `@Backend` (.NET 10) $\rightarrow$ `@AppSec` (Duelo Red/Blue Team) $\rightarrow$ `@Frontend` (React 19 + shadcn/ui com 4 estados).
+- **Sprint 3:** `@QA` (Playwright CLI + Testcontainers) $\rightarrow$ `@DevOps` (Docker rootless + CI/CD) $\rightarrow$ `PROJECT_MAP.md` 100% preenchido.
+
+### 🔍 Cenário B: Auditoria, Validação & Evolução de Projeto Existente (Brownfield)
+Quando solicitado para validar um projeto já em andamento:
+1. **Mapeamento de Escopo:** `@Coord` escaneia a estrutura e entrega o panorama para o `@PM`.
+2. **Diagnóstico do `@PM`:** O `@PM` avalia o produto atual, diagnostica **gaps funcionais**, carências competitivas e define a lista de melhorias prioritárias.
+3. **Auditoria Especializada 360°:**
+   - `@Designer`: Avalia a UX existente, consistência de design e gera o `DESIGN.md`.
+   - `@DBA`: Avalia o banco, mapeamento EF Core, índices faltantes e concorrência.
+   - `@Backend`: Avalia aderência às 4 camadas, desacoplamento e resiliência.
+   - `@AppSec`: Realiza pentest preliminar buscando BOLA, injeções e falhas de autenticação.
+   - `@QA`: Avalia a testabilidade e ausência de testes de concorrência.
+   - `@DevOps`: Avalia segurança dos containers e observabilidade.
+4. **Geração do `PROJECT_MAP.md`:** O `@Coord` consolida o mapa cirúrgico de todas as telas, botões e rotas já existentes.
+5. **Plano de Ação:** O esquadrão apresenta o relatório consolidado de auditoria e aguarda o aval do usuário para executar as melhorias de forma cirúrgica.
 
 ```mermaid
 flowchart LR

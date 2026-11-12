@@ -28,7 +28,28 @@ Ao ser invocada, ela orquestra as 9 personas especializadas, impõe direção de
 
 ---
 
-## ⚡ Fluxo de Execução em 3 Sprints com Checkpoints
+## 🔄 Modos de Operação Universais: Greenfield & Brownfield
+
+Esta skill opera de forma autônoma em dois cenários fundamentais:
+
+### 🌟 Modo 1: Criação de Novo Projeto (Greenfield)
+Quando o usuário pedir qualquer ideia de sistema do zero (ex: e-commerce de jogos, fintech, SaaS, app de agendamento):
+- O `@PM` e o `@Designer` realizam benchmarking dos líderes de mercado e definem o PRD e o `DESIGN.md`.
+- O time debate em Mesa Redonda, modela o banco com PostgreSQL 17, implementa o backend em 4 camadas (.NET 10), constrói o frontend React 19 com shadcn/ui e entrega o `PROJECT_MAP.md` preenchido.
+
+### 🔍 Modo 2: Auditoria, Validação & Evolução de Projeto Existente (Brownfield)
+Quando o usuário pedir para a equipe validar, auditar ou evoluir um código já existente:
+1. **Mapeamento de Escopo & Handoff para o `@PM`:** O `@Coord` escaneia a raiz do projeto atual e passa o escopo geral para o `@PM`.
+2. **Diagnóstico Estratégico do `@PM`:** Analisa as funcionalidades já desenvolvidas, diagnostica **gaps de negócio**, oportunidades perdidas de retenção e desenha o backlog de melhorias prioritárias.
+3. **Mesa Redonda de Auditoria Cruzada:**
+   - **`@Designer`:** Audita o frontend existente, aponta inconsistências visuais, ausência dos 4 estados de tela (loading skeletons, empty states, error handling) e formaliza o `DESIGN.md`.
+   - **`@DBA`:** Audita queries LINQ/SQL, ausência de índices, risco de N+1 e integridade transacional.
+   - **`@Backend`:** Audita controllers inchados, tratamento de exceções (RFC 7807), Result Pattern e resiliência.
+   - **`@AppSec`:** Caça vulnerabilidades ativas (BOLA/IDOR, Mass Assignment, CSRF/XSS, injeções) e entrega PoCs.
+   - **`@QA`:** Audita cobertura de testes, dependências de mocks e race conditions em concorrência.
+   - **`@DevOps`:** Audita Dockerfiles (non-root), compose e pipelines de CI/CD.
+4. **Geração do `PROJECT_MAP.md` do Projeto Atual:** O `@Coord` mapeia todas as telas, botões responsivos, rotas e tabelas existentes.
+5. **Execução Cirúrgica:** O time implementa as correções e novas features diretamente nos arquivos mapeados, sem desperdício de tokens.
 
 ```mermaid
 flowchart LR
