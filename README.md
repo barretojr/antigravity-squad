@@ -57,7 +57,15 @@ Instalação global publica agentes, regras, comandos e skills em `~/.gemini/con
 
 Design System transforma a direção visual em tokens, componentes, estados e regras específicas do produto. Taste-skill orienta direção de arte sem impor uma linguagem visual universal. Playwright CLI dá ao Frontend Reviewer um fluxo de browser para avaliar responsividade, hierarquia, console e requests.
 
-Referências: [awesome-design-md](https://github.com/voltagent/awesome-design-md), [taste-skill](https://github.com/leonxlnx/taste-skill) e [Microsoft Playwright CLI](https://github.com/microsoft/playwright-cli).
+## Créditos e licenças de terceiros
+
+| Projeto | Como é usado aqui | Licença upstream |
+|---|---|---|
+| [VoltAgent/awesome-design-md](https://github.com/voltagent/awesome-design-md) | Catálogo de referência para pesquisar sistemas visuais e estruturar o `DESIGN.md` específico de cada produto. Nenhum arquivo de design ou ativo visual do catálogo é redistribuído. | [MIT](https://github.com/voltagent/awesome-design-md/blob/main/LICENSE) |
+| [leonxlnx/taste-skill](https://github.com/leonxlnx/taste-skill) | Inspira a skill adaptada de direção de arte e revisão visual. A adaptação está identificada em [UPSTREAM.md](.antigravity/skills/design-taste-frontend/UPSTREAM.md); scripts, imagens e templates upstream não foram incluídos. | [MIT](https://github.com/leonxlnx/taste-skill/blob/main/LICENSE) |
+| [Microsoft Playwright CLI](https://github.com/microsoft/playwright-cli) | Documentação consultada para o fluxo de browser e exemplos de comandos; o pacote não é empacotado nem redistribuído por este repositório. | [Apache-2.0](https://github.com/microsoft/playwright-cli/blob/main/LICENSE) |
+
+O [LICENSE](LICENSE) na raiz cobre o conteúdo original deste repositório. Os projetos e materiais de terceiros permanecem sob suas respectivas licenças.
 
 ## Licença
 
