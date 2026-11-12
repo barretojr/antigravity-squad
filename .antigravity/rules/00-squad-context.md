@@ -26,7 +26,19 @@ Quando o usuário acionar o esquadrão com uma demanda de negócio (por exemplo:
 
 ---
 
-## 3. Princípios de Engenharia Inegociáveis (Anti-Patterns Proibidos)
+## 3. Princípio de Mapa de Navegação Cirúrgica & Economia de Tokens (`PROJECT_MAP.md`)
+Todo projeto desenvolvido ou mantido pelo esquadrão deve obrigatoriamente possuir e manter sincronizado o arquivo **`PROJECT_MAP.md`** na raiz do repositório da aplicação.
+
+1. **Objetivo do `PROJECT_MAP.md`:**
+   Atuar como o **GPS Cirúrgico do Código**, catalogando com precisão milimétrica a localização de cada componente de tela, elemento interativo (botões, modais, drawers, formulários), comportamento de responsividade (mobile vs. desktop), rotas da API, casos de uso e tabelas do banco.
+2. **Regra Inegociável de "Zero Full Scan" para Manutenções:**
+   - Quando o usuário pedir qualquer alteração (ex: *"quero que o botão x no mobile fique somente embaixo"* ou *"altere a validação do campo Y"*), o agente **nunca** deve fazer pesquisas cegas (`grep`, listagem recursiva de pastas ou leitura de múltiplos arquivos).
+   - O agente **lê exclusivamente o `PROJECT_MAP.md`**, localiza o arquivo e linha exatos do elemento alvo, abre apenas aquele arquivo específico, realiza a alteração e atualiza o mapa.
+   - Isso garante edições cirúrgicas e economia massiva de até 90% dos tokens de contexto.
+
+---
+
+## 4. Princípios de Engenharia Inegociáveis (Anti-Patterns Proibidos)
 1. **Zero Fake In-Memory Testing:** É terminantemente proibido o uso de `EF Core InMemory` para testes de banco. Todos os testes de repositório e integração devem validar SQL e constraints reais contra o PostgreSQL no `Testcontainers`.
 2. **Zero Naked Primitives no Domínio:** IDs, e-mails, documentos e valores monetários devem ser encapsulados em *Value Objects* ou *Strongly Typed IDs* com validação em tempo de instanciação.
 3. **Zero Leaking de Camadas:** A camada `Domain` nunca referencia `Infrastructure`, `EntityFramework` ou `AspNetCore`. Controllers nunca injetam `DbContext` ou manipulam queries LINQ.

@@ -67,19 +67,30 @@ flowchart LR
 
 ### 📍 Sprint 1: Discovery, Design System, Contratos & Banco de Dados
 1. `@PM` apresenta o **PRD 1-Pager** com JTBD, Benchmarking dos líderes de mercado e recorte do MVP.
-2. `@Designer` apresenta a **Especificação de Design System**, paleta semântica, layout Bento Grid e microinterações.
-3. `@Coord` apresenta os **Critérios de Aceite em BDD Gherkin** e contratos de endpoints API-First.
+2. `@Designer` gera o arquivo **`DESIGN.md`** na raiz do projeto (estética intencional sem AI Slop, tokens de cores semânticos, escala tipográfica e regras de layout).
+3. `@Coord` inicializa o **`PROJECT_MAP.md`** na raiz do projeto (GPS de navegação cirúrgica) e apresenta os **Critérios de Aceite em BDD Gherkin**.
 4. `@DBA` apresenta o **Diagrama ER**, script DDL no PostgreSQL 17 (com UUIDv7) e índices otimizados.
 5. `@AppSec` apresenta o **Threat Model STRIDE** preliminar para o modelo de negócio proposto.
 *👉 Pausa com resumo executivo e solicitação de validação do usuário.*
 
 ### 📍 Sprint 2: Construção Backend, Duelo de Segurança & Interface Frontend
-1. `@Backend` apresenta a implementação das 4 camadas (.NET 10), thin controllers e serviços com Result Pattern.
+1. `@Backend` apresenta a implementação das 4 camadas (.NET 10), thin controllers e serviços com Result Pattern, catalogando rotas e models no `PROJECT_MAP.md`.
 2. `@AppSec` realiza o duelo técnico (Red Team) apresentando PoC de ataque e imediatamente entrega o patch corretivo (Blue Team).
-3. `@Frontend` apresenta os componentes React 19 com shadcn/ui, schemas Zod, custom hooks e os 4 estados de tela.
+3. `@Frontend` apresenta os componentes React 19 com shadcn/ui baseados fielmente no `DESIGN.md`, cobrindo os 4 estados de tela e catalogando cada botão, drawer, formulário e classes de responsividade (mobile vs. desktop) no `PROJECT_MAP.md`.
 *👉 Pausa com resumo executivo e solicitação de validação do usuário.*
 
 ### 📍 Sprint 3: Testes Automatizados Reais & Infraestrutura SRE
-1. `@QA` apresenta a suíte de testes unitários com Bogus, testes de integração reais via `Testcontainers.PostgreSql` e teste E2E com Playwright.
+1. `@QA` valida visualmente a responsividade via **`playwright-cli`** nos viewports mobile (390px) e desktop (1440px), executa testes reais com `Testcontainers.PostgreSql` e registra as suítes no `PROJECT_MAP.md`.
 2. `@DevOps` apresenta os Dockerfiles multi-stage non-root, `docker-compose.yml` com healthchecks e pipeline GitHub Actions com Trivy.
-*👉 Entrega final concluída com todos os selos de qualidade.*
+*👉 Entrega final concluída com todos os selos de qualidade e `PROJECT_MAP.md` 100% preenchido.*
+
+---
+
+## 4. Protocolo de Manutenção Cirúrgica (Zero Full Scan & Economia de Tokens)
+Sempre que o usuário solicitar uma alteração ou ajuste em um projeto já existente (ex: *"mude o botão x para ficar somente embaixo no mobile"*):
+1. **O Agente consulta EXCLUSIVAMENTE o `PROJECT_MAP.md`** na raiz do projeto.
+2. Localiza a linha do componente na **Tabela de Componentes UI** ou **Tabela de Endpoints**.
+3. Abre **diretamente o arquivo apontado pelo mapa** (sem rodar grep, sem listar diretórios, sem ler outros arquivos).
+4. Aplica a alteração pontual (ex: adiciona `fixed bottom-0 z-50 w-full md:relative`).
+5. Atualiza o `PROJECT_MAP.md` refletindo o novo comportamento.
+6. Reporta a conclusão ao usuário com economia máxima de tokens.

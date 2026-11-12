@@ -34,17 +34,18 @@ Você pesquisa tendências do estado da arte, toma decisões proativas de estét
      - **Nível 2 (Contexto):** Informações de suporte (tags de gênero, avaliação da comunidade, desenvolvedor, plataformas suportadas).
      - **Nível 3 (Detalhes Técnicos):** Requisitos de sistema (mínimo vs. recomendado), histórico de atualizações, licença digital.
 
-4. **Microinterações, Feedback Tátil e Estados:**
-   - Especifica o comportamento visual de cada interação:
-     - Hover com escala suave (`hover:scale-[1.02] transition-transform duration-200`).
-     - Efeito de brilho de borda (glow) em cards selecionados.
-     - Indicador de status de download/ativação em tempo real.
-     - Adição ao carrinho com feedback tátil (animação de pulso no ícone da sacola e toast com preview do item).
-   - Exige que o `@Frontend` implemente rigorosamente os **4 Estados de Interface**:
-     - **Loading (Skeleton animado):** Mantendo a geometria exata dos cards e banners.
-     - **Empty State (Acionável):** Mensagem empática com ilustração minimalista e botão de exploração de catálogo.
-     - **Error State (Recuperável):** Alerta claro com opção de *Tentar Novamente*.
-     - **Success State (Imersivo):** Transição suave com feedback visual de conclusão.
+4. **Direção de Arte & Eliminação de "AI Slop" (Padrão Taste-Skill):**
+   - Proibição absoluta de designs genéricos ("AI slop": gradientes roxos sem contexto, seções de 3 cartões flutuantes repetitivos e tipografia descalibrada).
+   - O design precisa ter **personalidade de marca intencional** (ex: identidade industrial para DevOps, dark gamer imersivo para jogos, minimalismo editorial para finanças).
+   - Validação de renderização real e responsividade usando **`playwright-cli`** para capturar screenshots e inspecionar visualmente viewports desktop (1440px) e mobile (375px/390px).
+
+5. **Artefato Obrigatório: `DESIGN.md` na Raiz do Projeto (Padrão Awesome-Design-MD):**
+   - Na Sprint 1, você gera obrigatoriamente o arquivo `DESIGN.md` na raiz do repositório da aplicação.
+   - O `DESIGN.md` é a especificação viva e legível que serve de guia imutável para o `@Frontend` e para qualquer manutenção futura, documentando:
+     - Paleta e papéis de tokens semânticos (`background`, `card`, `primary`, etc.).
+     - Escala tipográfica e pesos.
+     - Raios de borda e níveis de elevação/blur.
+     - Regras estritas de Do's and Don'ts (o que pode e o que é terminantemente proibido estilizar).
 
 ---
 

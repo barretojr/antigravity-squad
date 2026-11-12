@@ -3,11 +3,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Antigravity%20CLI%20%7C%20IDE-orange.svg)]()
 [![Stack](https://img.shields.io/badge/Stack-.NET%2010%20%7C%20Postgres%2017%20%7C%20React%2019-green.svg)]()
-[![Personas](https://img.shields.io/badge/Squad-9%20Specialists-purple.svg)]()
+[![UI/UX](https://img.shields.io/badge/Design-Taste--Skill%20%7C%20DESIGN.md-ff69b4.svg)]()
+[![Token Saver](https://img.shields.io/badge/Architecture-PROJECT__MAP.md%20(Zero%20Scan)-brightgreen.svg)]()
 
-Um esquadrão autônomo de inteligência artificial de nível **Principal & Staff Engineer**, projetado para atuar de forma colaborativa, crítica e autônoma dentro do ecossistema **Google Antigravity**.
+Um esquadrão autônomo completo de inteligência artificial de nível **Principal & Staff Engineer**, projetado para atuar de forma colaborativa, crítica e cirúrgica dentro do ecossistema **Google Antigravity**.
 
-Em vez de atuar como geradores isolados de código que precisam de instruções óbvias para cada tabela ou botão, os agentes operam com **Autonomia de Domínio & Benchmarking Proativo**. Eles pesquisam o estado da arte do mercado, tomam decisões técnicas e visuais de alto impacto, debatem em **Mesa Redonda**, refinam contratos de integração e impõem **Portões de Validação Cruzada (Quality Gates)** antes de finalizar qualquer entrega.
+Você chama **uma única skill** (`/teamwork` ou `antigravity-squad`), e ela orquestra **9 especialistas técnicos** que trabalham em harmonia. Eles eliminam designs genéricos ("AI Slop"), aplicam direção de arte refinada, garantem arquitetura corporativa (.NET 10 + Postgres 17) e geram um **mapa cirúrgico vivo (`PROJECT_MAP.md`)** para que qualquer manutenção futura economize até 90% de tokens de contexto!
 
 ---
 
@@ -15,8 +16,8 @@ Em vez de atuar como geradores isolados de código que precisam de instruções 
 
 ```mermaid
 flowchart TD
-    PM["@PM (Product Strategist & Market Benchmarking)"] <-->|"Jornada & UX"| Designer["@Designer (UI/UX & Design System)"]
-    PM <-->|"Refinamento BDD"| Coord["@Coord (Tech Coordinator & Delivery Lead)"]
+    PM["@PM (Product Strategist & Market Benchmarking)"] <-->|"Jornada & UX"| Designer["@Designer (UI/UX, Taste & DESIGN.md)"]
+    PM <-->|"Refinamento BDD"| Coord["@Coord (Tech Coordinator & PROJECT_MAP.md)"]
     Designer -->|"Tokens Semânticos & Bento Grids"| Frontend["@Frontend (React 19 & shadcn/ui)"]
     Coord -->|"Contratos & Regras"| Backend["@Backend (.NET 10 / C# Architecture)"]
     Coord -->|"Contratos & Telas"| Frontend
@@ -24,31 +25,61 @@ flowchart TD
     Backend <-->|"Duelo Hacker: Ataque & Patch"| AppSec["@AppSec (Red / Blue Team)"]
     Frontend <-->|"Sanitização XSS & Proteção de Rotas"| AppSec
     Backend <-->|"Sincronismo DTOs & SignalR"| Frontend
-    Coord & AppSec & Backend & Designer -->|"Critérios BDD, PoCs & Acessibilidade"| QA["@QA (Testcontainers & Playwright)"]
+    Coord & AppSec & Backend & Designer -->|"Critérios BDD, PoCs & Playwright CLI"| QA["@QA (Testcontainers & Playwright CLI)"]
     DBA & Backend & Frontend & QA -->|"Artefatos & Quality Gates"| DevOps["@DevOps (Docker Rootless & CI/CD)"]
 ```
 
 | # | Persona | Papel & Especialidade | Arquivo de Configuração |
 | :---: | :--- | :--- | :--- |
-| **01** | **`@PM`** | **Principal Product Strategist:** Benchmarking de mercado, JTBD, 5 Porquês, North Star e corte cirúrgico para MVP. | [01-pm.md](.antigravity/agents/01-pm.md) |
-| **02** | **`@Coord`** | **Tech Coordinator & Agile Lead:** Quebra em PBIs verticais, critérios BDD Gherkin e contratos API-First. | [02-coord.md](.antigravity/agents/02-coord.md) |
-| **03** | **`@DBA`** | **Principal Data Architect:** PostgreSQL 17+, UUIDv7, concorrência `xmin`, índices parciais e migrations seguras. | [03-dba.md](.antigravity/agents/03-dba.md) |
-| **04** | **`@Backend`** | **Staff Backend Engineer:** .NET 10, C# 13/14, Clean Architecture em 4 camadas, Result Pattern e Outbox. | [04-backend.md](.antigravity/agents/04-backend.md) |
-| **05** | **`@Frontend`** | **Senior Frontend Engineer:** React 19, TypeScript estrito, shadcn/ui, TanStack Query e os 4 estados obrigatórios. | [05-frontend.md](.antigravity/agents/05-frontend.md) |
-| **06** | **`@AppSec`** | **Principal Security Engineer & Ethical Hacker:** Red Team com PoCs de ataque e Blue Team com patches imediatos. | [06-appsec.md](.antigravity/agents/06-appsec.md) |
-| **07** | **`@QA`** | **Principal SDET:** Testes reais com `Testcontainers.PostgreSql`, concorrência e Playwright E2E com acessibilidade. | [07-qa.md](.antigravity/agents/07-qa.md) |
-| **08** | **`@DevOps`** | **Staff Cloud Architect & SRE:** Docker multi-stage rootless chiseled, Migration Bundles e GitHub Actions com Trivy. | [08-devops.md](.antigravity/agents/08-devops.md) |
-| **09** | **`@Designer`** | **Senior UI/UX & Design System Architect:** Benchmarking visual (Steam, Linear, Vercel), Bento Grids, paletas dark e microinterações. | [09-designer.md](.antigravity/agents/09-designer.md) |
+| **01** | **`@PM`** | **Principal Product Strategist:** Benchmarking de líderes mundiais (Steam, Stripe, Linear), JTBD e cortes de MVP. | [01-pm.md](.antigravity/agents/01-pm.md) |
+| **02** | **`@Coord`** | **Tech Coordinator & Delivery Lead:** BDD Gherkin, contratos API-First e curadoria do `PROJECT_MAP.md`. | [02-coord.md](.antigravity/agents/02-coord.md) |
+| **03** | **`@Designer`** | **Senior UI/UX & Design Architect:** Direção de arte intencional (*taste-skill*), Bento Grids e geração do `DESIGN.md`. | [09-designer.md](.antigravity/agents/09-designer.md) |
+| **04** | **`@DBA`** | **Principal Data Architect:** PostgreSQL 17+, UUIDv7, travas pessimistas contra overselling e índices otimizados. | [03-dba.md](.antigravity/agents/03-dba.md) |
+| **05** | **`@Backend`** | **Staff Backend Engineer:** .NET 10, C# 13/14, Clean Architecture em 4 camadas, Result Pattern e Outbox. | [04-backend.md](.antigravity/agents/04-backend.md) |
+| **06** | **`@Frontend`** | **Senior Frontend Engineer:** React 19, shadcn/ui, os 4 estados obrigatórios e responsividade cirúrgica mobile vs desktop. | [05-frontend.md](.antigravity/agents/05-frontend.md) |
+| **07** | **`@AppSec`** | **Principal Security Engineer & Ethical Hacker:** Red Team com PoCs de ataque e Blue Team com patches imediatos. | [06-appsec.md](.antigravity/agents/06-appsec.md) |
+| **08** | **`@QA`** | **Principal SDET:** Testes no Postgres com Testcontainers e inspeção visual responsiva com **`playwright-cli`**. | [07-qa.md](.antigravity/agents/07-qa.md) |
+| **09** | **`@DevOps`** | **Staff Cloud Architect & SRE:** Docker multi-stage rootless chiseled e CI/CD com Trivy. | [08-devops.md](.antigravity/agents/08-devops.md) |
 
 ---
 
-## 🧭 Sobre a Pasta `.antigravity`: Como Funciona a Descoberta?
+## 🎨 O Fim do "AI Slop": Direção de Arte com Taste-Skill & DESIGN.md
 
-> **Dúvida comum:** *Por que o repositório utiliza a pasta `.antigravity`? Seria prudente mudar?*
+Modelos de IA costumam gerar interfaces genéricas e sem vida (gradientes roxos padronizados e cards repetitivos). Este esquadrão adota duas inovações do estado da arte:
 
-O **Google Antigravity** segue uma convenção nativa de descoberta hierárquica baseada em pastas de contexto (como `.antigravity/` ou `.agents/`) localizadas na raiz do seu projeto de trabalho:
-- Ao abrir um projeto que contém `.antigravity/`, o Antigravity carrega instantaneamente as regras (`rules/`), comandos customizados (`commands/`) e perfis de especialistas (`agents/`).
-- Para facilitar a distribuição entre amigos e múltiplos projetos, este repositório traz **scripts automatizados de instalação** (`install.ps1` e `install.sh`). Você pode escolher entre instalar **no projeto atual** ou **globalmente na sua máquina**!
+1. **Taste-Skill & Intencionalidade Visual:**
+   - O `@Designer` e o `@Frontend` aplicam direção de arte baseada no nicho do produto (ex: estética dark imersiva com acentos ciano/esmeralda para games; minimalismo editorial para finanças).
+   - Uso de **Bento Grids assimétricos**, glassmorphism refinado (`border-border/40`, `backdrop-blur-md`) e microinterações táteis.
+2. **Geração Automática do `DESIGN.md` (Padrão Awesome-Design-MD):**
+   - Na primeira sprint, o `@Designer` salva na raiz do projeto o arquivo **`DESIGN.md`**, registrando os tokens semânticos de cores, escala tipográfica, elevações e regras de Do's & Don'ts de estilo. Qualquer alteração futura respeitará essa mesma identidade visual!
+3. **Inspeção Visual Real com `playwright-cli`:**
+   - O `@QA` e o `@Frontend` realizam testes em navegadores reais headless nos viewports **Desktop (1440px)** e **Mobile (390px)**, assegurando que componentes críticos fiquem perfeitamente posicionados em telas pequenas.
+
+---
+
+## 🗺️ O GPS do Código: `PROJECT_MAP.md` (Economia Extrema de Tokens)
+
+Quando você pede para uma IA alterar um elemento em um projeto grande, o comportamento padrão é rodar `grep` indiscriminado, listar dezenas de pastas e ler 15 arquivos desnecessários, queimando milhares de tokens.
+
+**Com o `PROJECT_MAP.md`, isso acabou:**
+
+O esquadrão gera e mantém na raiz da sua aplicação o **`PROJECT_MAP.md`**, uma tabela cirúrgica que mapeia cada botão, modal, gaveta, rota e serviço:
+
+```markdown
+| Elemento / Componente | Arquivo Relativo | Responsividade (Mobile vs Desktop) | Estado / Hook Associado |
+| :--- | :--- | :--- | :--- |
+| **Botão Comprar (CTA)** | `src/components/cart/checkout-button.tsx` | Mobile: Fixo inferior (`fixed bottom-0 z-50 w-full`)<br>Desktop: No card (`relative`) | `useCheckout.mutate()` |
+| **Drawer do Carrinho** | `src/components/cart/cart-sheet.tsx` | Mobile: Bottom Sheet (`h-[80vh]`)<br>Desktop: Lateral direito (`w-[420px]`) | TanStack Query + Zod |
+```
+
+### ⚡ Como Funciona uma Alteração Futura:
+Se você disser:
+> *"Quero que o botão de comprar no mobile fique fixo na parte inferior da tela."*
+
+1. O agente **consulta exclusivamente o `PROJECT_MAP.md`**.
+2. Identifica instantaneamente a linha correspondente: `src/components/cart/checkout-button.tsx`.
+3. **Não faz busca nem varredura no resto do projeto.** Ele abre apenas aquele arquivo, altera a classe para `fixed bottom-0 z-50 w-full md:relative`, atualiza o mapa e finaliza.
+4. **Economia de até 90% dos tokens de contexto!**
 
 ---
 
@@ -88,92 +119,68 @@ chmod +x install.sh
 ./install.sh --global
 ```
 
-#### Instalação Manual (Sem Scripts):
-Se preferir, basta copiar a pasta `.antigravity` para dentro da raiz de qualquer projeto em que você for trabalhar:
-```powershell
-Copy-Item -Recurse -Path ".\.antigravity" -Destination "C:\SeuProjeto\.antigravity"
-```
-
 ---
 
-## 🎮 Como Usar: O Poder da Decisão Autônoma
+## 🎮 Como Usar: Apenas 1 Comando de Entrada
 
-Com o esquadrão instalado, abra o **Antigravity CLI** ou **Antigravity IDE** no seu projeto e dispare o comando `/teamwork` no chat:
+Com o esquadrão instalado, abra o **Antigravity CLI** ou **Antigravity IDE** no seu projeto e dispare:
 
 ```text
 /teamwork Desenvolva uma plataforma moderna de venda de jogos online com catálogo interativo, checkout seguro e entrega de chaves digitais.
 ```
+*(Você também pode invocar via skill: `@antigravity-squad`)*.
 
-### O que acontece a partir daqui? (Magia em 3 Sprints)
-Você **não precisa** ficar respondendo 20 perguntas óbvias sobre autenticação, banco ou carrinho. O time assume o domínio e decide com base nas melhores práticas do mercado:
+### 🕹️ O que acontece a partir daqui? (3 Sprints Interativas)
 
 ```mermaid
 flowchart LR
-    S1["Sprint 1: Discovery, Design & Banco"] -->|"Pausa para sua validação"| S2["Sprint 2: Construção & Blindagem"]
-    S2 -->|"Pausa para sua validação"| S3["Sprint 3: Qualidade & SRE"]
+    S1["Sprint 1: Discovery, DESIGN.md & Banco"] -->|"Pausa para sua validação"| S2["Sprint 2: Código, AppSec & Telas"]
+    S2 -->|"Pausa para sua validação"| S3["Sprint 3: Playwright, SRE & PROJECT_MAP"]
 ```
 
-#### 🕹️ Exemplo Real de Decisões Tomadas pelo Time:
-1. **`@PM` (Estratégia de Negócio):**
-   - Ativa benchmarking direto dos líderes mundiais: **Steam, Epic Games Store e GOG**.
-   - Modela o core do produto: catálogo com filtros de gênero/desconto, bundles promocionais, sistema de wishlist, avaliação da comunidade e biblioteca do jogador.
-   - Aplica os cortes cirúrgicos do MVP para entrega rápida de alto impacto.
-2. **`@Designer` (Identidade Visual & UI/UX):**
-   - Projeta uma estética **Dark Gaming Imersiva** (tons profundos de slate/zinc com acentos em ciano neon e esmeralda).
-   - Desenha um **Bento Grid** dinâmico com Hero banner para trailers, cards de jogos com badges de plataforma (PC/Console) e microinterações táteis no hover.
-   - Especifica um **Drawer de Checkout (Sheet)** rápido, permitindo comprar sem sair da vitrine.
-3. **`@Coord` (Engenharia de Contratos):**
-   - Escreve os cenários de aceite em **BDD Gherkin** (*Dado que o usuário tem fundos / Quando comprar a chave / Então deve reservar com exclusividade*).
-4. **`@DBA` (Arquitetura de Dados no Postgres 17):**
-   - Modela o schema relacional com **UUIDv7**, índices compostos para busca de jogos e soft delete seguro.
-   - Cria o modelo de **Chaves de Licença (`LicenseKey`)** com máquina de estados (`Available`, `Reserved`, `Claimed`, `Revoked`).
-   - Define a trava pessimista com `SELECT ... FOR UPDATE` para garantir **zero venda duplicada** de chave única (*zero overselling*).
-5. **`@Backend` (Arquitetura .NET 10 em 4 Camadas):**
-   - Implementa a transação atômica de checkout com **Idempotency-Key** e **Result Pattern**.
-   - Cria webhooks com assinatura criptográfica HMAC SHA-256 para confirmação de pagamento.
-   - Utiliza o **Outbox Pattern** para entrega garantida de eventos de compra e disparo de e-mails/recibos.
-6. **`@AppSec` (Duelo de Segurança & Blindagem):**
-   - Ataca a aplicação simulando manipulação de preços no payload do frontend (recalculando sempre o total no backend).
-   - Simula ataques de força bruta no resgate de chaves e aplica rate limiting por IP/Profile.
-   - Entrega os patches corretivos no mesmo instante.
-7. **`@Frontend` (React 19 + shadcn/ui):**
-   - Constrói os componentes fiéis ao design, cobrindo com rigor os **4 Estados de Tela**: *Loading Skeleton*, *Empty State*, *Error State* e *Success State*.
-   - Integra cache otimista com **TanStack Query v5**.
-8. **`@QA` (Engenharia de Qualidade Concreta):**
-   - Não usa mocks frágeis; sobe instâncias reais do PostgreSQL via **`Testcontainers`** em Docker.
-   - Valida condições de corrida de compras simultâneas com `Parallel.ForEachAsync` e executa jornadas E2E no **Playwright** com auditoria de acessibilidade `@axe-core/playwright`.
-9. **`@DevOps` (Infraestrutura Pronta para Produção):**
-   - Gera Dockerfile multi-stage rootless chiseled (`USER $APP_UID`), compose e pipeline de CI/CD com scanner de segurança **Trivy**.
+1. **Sprint 1 (Fundação & Identidade):**
+   - `@PM` analisa os líderes mundiais (**Steam, Epic Games Store, GOG**) e entrega o PRD 1-Pager.
+   - `@Designer` cria o **`DESIGN.md`** com a estética Dark Gaming imersiva, Bento Grids e tokens semânticos.
+   - `@Coord` inicializa o **`PROJECT_MAP.md`** e os cenários BDD Gherkin.
+   - `@DBA` gera o schema Postgres 17 com **UUIDv7** e trava pessimista `SELECT ... FOR UPDATE` para **zero venda duplicada de chaves** (*zero overselling*).
+   - `@AppSec` apresenta o Threat Model STRIDE.
+2. **Sprint 2 (Construção & Blindagem):**
+   - `@Backend` entrega as 4 camadas em .NET 10 com transações atômicas, Idempotency-Key e Outbox Pattern.
+   - `@AppSec` testa manipulação de preços no payload e entrega os patches de segurança.
+   - `@Frontend` entrega os componentes React 19 + shadcn/ui cobrindo rigorosamente os **4 estados de tela** (Skeleton, Empty, Error, Success).
+   - Cada botão, drawer e endpoint é registrado no `PROJECT_MAP.md`.
+3. **Sprint 3 (Inspeção com Playwright & SRE):**
+   - `@QA` testa a responsividade via **`playwright-cli`** em mobile e desktop e sobe instâncias reais do PostgreSQL no `Testcontainers`.
+   - `@DevOps` gera Dockerfiles non-root chiseled e pipeline no GitHub Actions com scanner **Trivy**.
+   - O `PROJECT_MAP.md` é entregue 100% preenchido como o GPS da sua aplicação.
 
 ---
 
-## 📋 Regras de Convivência e Desempate Técnico
-
-Quando houver divergência técnica entre os agentes na mesa redonda, o `@Coord` arbitra seguindo esta regra inegociável:
-
-$$\text{Segurança e Conformidade} > \text{Integridade dos Dados} > \text{Resiliência e Performance} > \text{Experiência do Usuário (UX)} > \text{Velocidade de Escrita}$$
-
----
-
-## 📂 Estrutura de Arquivos do Repositório
+## 📂 Estrutura do Repositório
 
 ```text
 .
 ├── .antigravity/
-│   ├── agents/
+│   ├── agents/               # Os 9 Especialistas Técnicos
 │   │   ├── 01-pm.md          # Visão de Produto, JTBD e Benchmarking
 │   │   ├── 02-coord.md       # BDD Gherkin, Fatiamento e Contratos
 │   │   ├── 03-dba.md         # Postgres 17, UUIDv7 e Concorrência
 │   │   ├── 04-backend.md     # .NET 10, Clean Architecture e Outbox
 │   │   ├── 05-frontend.md    # React 19, shadcn/ui e 4 Estados
 │   │   ├── 06-appsec.md      # Red Team, OWASP Top 10 e Patches
-│   │   ├── 07-qa.md          # Testcontainers, Bogus e Playwright
+│   │   ├── 07-qa.md          # Testcontainers, Bogus e Playwright CLI
 │   │   ├── 08-devops.md      # Docker Rootless e GitHub Actions
-│   │   └── 09-designer.md    # UI/UX, Design System e Bento Grids
+│   │   └── 09-designer.md    # UI/UX, Taste-Skill, DESIGN.md e Bento Grids
 │   ├── commands/
-│   │   └── teamwork.md       # Workflow /teamwork em 3 Sprints
-│   └── rules/
-│       └── 00-squad-context.md # Stack imutável, anti-patterns e autonomia
+│   │   └── teamwork.md       # Workflow /teamwork em 3 Sprints e Manutenção Cirúrgica
+│   ├── rules/
+│   │   └── 00-squad-context.md # Stack imutável, anti-patterns e regra PROJECT_MAP
+│   ├── skills/
+│   │   └── antigravity-squad/ # Master Skill invocável do esquadrão
+│   │       └── SKILL.md
+│   └── templates/            # Templates padrão para novas aplicações
+│       ├── DESIGN.template.md
+│       └── PROJECT_MAP.template.md
 ├── install.ps1               # Instalador automatizado para Windows
 ├── install.sh                # Instalador automatizado para Linux/macOS
 ├── .gitignore                # Padrão limpo para desenvolvimento
@@ -183,11 +190,10 @@ $$\text{Segurança e Conformidade} > \text{Integridade dos Dados} > \text{Resili
 
 ---
 
-## 🤝 Dicas para Compartilhar com Amigos
+## 🤝 Compartilhe com Amigos
 
-1. **Envie o link do seu GitHub:** `https://github.com/barretojr/antigravity-squad`
-2. Seus amigos só precisam rodar o `git clone` e executar `.\install.ps1 -Global` para terem o esquadrão disponível em toda a máquina deles.
-3. Qualquer ideia de software que eles tiverem (fintech, streaming, e-commerce, ERP, app de delivery), o esquadrão analisa os concorrentes líderes e entrega a solução pronta, blindada e testada.
+Envie o repositório: **`https://github.com/barretojr/antigravity-squad`**  
+Seus amigos só precisam clonar e rodar `.\install.ps1 -Global` para ter o time completo de desenvolvimento de software em qualquer projeto!
 
 ---
 
