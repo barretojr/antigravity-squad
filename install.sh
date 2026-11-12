@@ -1,53 +1,63 @@
 #!/usr/bin/env bash
-# Script de instalação do Antigravity Autonomous Engineering Squad para Linux / macOS / WSL
+set -euo pipefail
 
-set -e
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source_dir="$script_dir/.antigravity"
+kinds=(agents rules skills commands)
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_DIR="$SCRIPT_DIR/.antigravity"
-
-echo -e "\n🚀 \033[1;36m[Antigravity Squad Installer]\033[0m\n"
-
-if [ ! -d "$SOURCE_DIR" ]; then
-    echo -e "\033[1;31mErro: Pasta '.antigravity' não encontrada em $SCRIPT_DIR\033[0m"
-    exit 1
+if [[ ! -d "$source_dir" ]]; then
+  echo "Erro: pasta fonte .antigravity não encontrada em $script_dir" >&2
+  exit 1
 fi
 
-if [ "$1" == "--global" ] || [ "$1" == "-g" ]; then
-    TARGET_DIR="$HOME/.gemini/antigravity-cli/skills/antigravity-squad"
-    echo -e "📦 Instalando globalmente em: \033[1;33m$TARGET_DIR\033[0m"
-    mkdir -p "$TARGET_DIR"
-    cp -r "$SOURCE_DIR/"* "$TARGET_DIR/"
-    echo -e "\033[1;32m✅ Esquadrão instalado globalmente com sucesso!\033[0m"
-    exit 0
+copy_squad_to() {
+  local destination_root="$1"
+  mkdir -p "$destination_root"
+  for kind in "${kinds[@]}"; do
+    if [[ -d "$source_dir/$kind" ]]; then
+      mkdir -p "$destination_root/$kind"
+      cp -R "$source_dir/$kind/." "$destination_root/$kind/"
+    fi
+  done
+  local skill_dir="$destination_root/skills/antigravity-squad"
+  mkdir -p "$skill_dir/templates"
+  cp "$source_dir/skills/antigravity-squad/SKILL.md" "$skill_dir/"
+  cp -R "$source_dir/skills/antigravity-squad/templates/." "$skill_dir/templates/"
+}
+
+install_global() {
+  local config_dir="$HOME/.gemini/config"
+  copy_squad_to "$config_dir"
+  local legacy_skill_dir="$HOME/.gemini/antigravity-cli/skills/antigravity-squad"
+  mkdir -p "$legacy_skill_dir"
+  cp -R "$source_dir/skills/antigravity-squad/." "$legacy_skill_dir/"
+  echo "Squad instalado globalmente em $config_dir"
+}
+
+if [[ "${1:-}" == "--global" || "${1:-}" == "-g" ]]; then
+  install_global
+  exit 0
 fi
 
-TARGET_PROJECT="$1"
-if [ -z "$TARGET_PROJECT" ]; then
-    echo "Escolha como deseja instalar:"
-    echo "1) No diretório atual ($(pwd))"
-    echo "2) Digitar caminho de outro projeto"
-    echo "3) Globalmente no Antigravity (~/.gemini/antigravity-cli)"
-    echo "q) Cancelar"
-    read -rp "Opção: " choice
-    case "$choice" in
-        1) TARGET_PROJECT="$(pwd)" ;;
-        2) read -rp "Caminho do projeto: " TARGET_PROJECT ;;
-        3) 
-            TARGET_DIR="$HOME/.gemini/antigravity-cli/skills/antigravity-squad"
-            mkdir -p "$TARGET_DIR"
-            cp -r "$SOURCE_DIR/"* "$TARGET_DIR/"
-            echo -e "\033[1;32m✅ Esquadrão instalado globalmente com sucesso!\033[0m"
-            exit 0
-            ;;
-        *) echo "Cancelado."; exit 0 ;;
-    esac
+target_project="${1:-}"
+if [[ -z "$target_project" ]]; then
+  echo "1) Instalar no diretório atual ($(pwd))"
+  echo "2) Informar outro projeto"
+  echo "3) Instalar globalmente"
+  echo "q) Cancelar"
+  read -rp "Opção: " choice
+  case "$choice" in
+    1) target_project="$(pwd)" ;;
+    2) read -rp "Raiz do projeto: " target_project ;;
+    3) install_global; exit 0 ;;
+    *) echo "Cancelado."; exit 0 ;;
+  esac
 fi
 
-DEST_DIR="$TARGET_PROJECT/.antigravity"
-echo -e "\n📁 Copiando para: \033[1;33m$DEST_DIR\033[0m"
-mkdir -p "$DEST_DIR"
-cp -r "$SOURCE_DIR/"* "$DEST_DIR/"
-
-echo -e "\033[1;32m✅ Instalação concluída com sucesso!\033[0m"
-echo -e "Abra o Antigravity no projeto e execute no chat: \033[1;36m/teamwork [sua demanda aqui]\033[0m\n"
+if [[ ! -d "$target_project" ]]; then
+  echo "Diretório de projeto não encontrado: $target_project" >&2
+  exit 1
+fi
+copy_squad_to "$target_project/.agents"
+echo "Squad instalado no workspace: $target_project/.agents"
+echo "Reabra ou recarregue o Antigravity e invoque /antigravity-squad."
