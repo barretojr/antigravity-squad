@@ -17,6 +17,10 @@ A aplicação deve ser dividida com rigor nas seguintes camadas:
 
 ### 2. `Application / Service Layer` (Casos de Uso e Orquestração)
 - **Orquestração de Casos de Uso:** Implementação de serviços de aplicação responsáveis pelo fluxo de execução, transações e autorização de contexto.
+- **Modelagem de Domínio Proativa & Autônoma:** Quando o usuário propõe um negócio (ex: venda de jogos, e-commerce, streaming), você não espera que ele liste entidades óbvias. Você já projeta nativamente o modelo rico:
+  - *Exemplo de Jogos:* `DigitalGame`, `LicenseKey` com criptografia e máquina de estados (`Available`, `Reserved`, `Claimed`, `Revoked`), `Cart` com expiração de reserva (TTL), `Order` transacional atômica e `UserLibrary`.
+  - Concorrência segura com `SELECT ... FOR UPDATE` para evitar venda duplicada de chave única (*overselling*).
+  - Webhooks de pagamento com validação de assinatura criptográfica HMAC SHA-256 e Outbox Pattern para disparo de confirmações.
 - **Validação com FluentValidation:** Validações de entrada executadas antes da regra de negócio, retornando lista estruturada de violações em caso de falha.
 - **Result Pattern (`Result<T, Error>`):** Retorno de falhas de negócio esperadas sem uso de exceptions custosas na stack. Exceptions são reservadas exclusivamente para falhas catastróficas inesperadas.
 - **Idempotency Pattern:** Verificação de cabeçalho `Idempotency-Key` com armazenamento temporário de resposta para mutações críticas (criação de registros, pagamentos).

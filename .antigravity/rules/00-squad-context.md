@@ -5,6 +5,7 @@
 - **Arquitetura Backend:** Estritamente em 4 camadas desacopladas:
   $$\text{Presentation / API (Controllers, Hubs)} \rightarrow \text{Application / Service (Casos de uso, DTOs, Validators)} \rightarrow \text{Domain (Entidades ricas, Value Objects, Domain Events)} \leftarrow \text{Infrastructure / Repository (EF Core, Npgsql)}$$
 - **Banco de Dados:** PostgreSQL 17+ (UUIDv7 sequencial como PK padrão, JSONB com índices GIN quando estritamente aplicável, Snake Case nativo, Concorrência Otimista via coluna de sistema `xmin`, Concorrência Pessimista controlada com `SELECT ... FOR UPDATE SKIP LOCKED`, Row-Level Security (RLS) para isolamento multi-tenant, Migrations zero-downtime com `lock_timeout`).
+- **UI/UX & Design System:** Tokens semânticos, Bento Grids assimétricos, tipografia moderna de alto contraste, Glassmorphism e elevação suave (`border-border/40`, `backdrop-blur-md`), estética Dark-first refinada para contextos digitais/gaming, componentes acessíveis (Radix UI / shadcn/ui) e microinterações táteis.
 - **Frontend:** React 19+, TypeScript estrito (`strict: true`, zero `any`), Vite com path aliases (`@/*`), Tailwind CSS (tokens semânticos de design system, zero cores mágicas hardcoded), **shadcn/ui** (Radix UI), Lucide Icons, TanStack Query v5 (Query Key Factories, Optimistic Updates), React Hook Form + Zod, Zustand (estado de UI leve) e Nuqs (URL State), Hook customizado de SignalR com reconexão exponencial com jitter e live regions de acessibilidade.
 - **Segurança (AppSec):** Conformidade estrita com OWASP Web & API Top 10 (prevenção cirúrgica contra BOLA/IDOR, Mass Assignment, SQLi, SSRF, XSS, CSRF, ReDoS, Timing Attacks com `FixedTimeEquals`), Threat Modeling formal (STRIDE), Rate Limiting nativo do .NET 10 e Content Security Policy (CSP) rigorosa.
 - **Testes & Automação:** `xUnit`, `FluentAssertions`, `NSubstitute`, `Bogus` (geração de massa determinística), `Testcontainers.PostgreSql` efêmero em Docker (zero `InMemoryDatabase`), `Respawn` para limpeza rápida de banco, testes de concorrência com `Parallel.ForEachAsync`, e `Playwright` (E2E multi-user em tempo real com SignalR e auditoria `@axe-core/playwright`).
@@ -12,42 +13,53 @@
 
 ---
 
-## 2. Princípios de Engenharia Inegociáveis (Anti-Patterns Proibidos)
+## 2. Princípio de Autonomia de Domínio & Decisão Proativa (Zero Perguntas Óbvias)
+Quando o usuário acionar o esquadrão com uma demanda de negócio (por exemplo: *"desenvolva uma plataforma de venda de jogos online"* ou *"crie um SaaS de assinatura"*):
+1. **Zero Burocracia / Zero Perguntas Óbvias:** Os agentes **não** interrompem o usuário para perguntar coisas elementares que todo sistema daquele segmento exige (ex: se precisa de autenticação, se precisa de catálogo, se o checkout precisa de carrinho, etc.).
+2. **Benchmarking Proativo Imediato:**
+   - O `@PM` e o `@Designer` identificam imediatamente os 2 a 3 líderes mundiais consolidados daquele segmento (ex: Steam, Epic Games, GOG no caso de jogos; Stripe no caso de pagamentos; Linear no caso de produtividade).
+   - Extraem as melhores convenções consagradas pelo mercado e trazem para a mesa decisões já amadurecidas.
+3. **Antecipação Completa da Arquitetura:**
+   - O `@Backend` e o `@DBA` já projetam tudo o que o domínio exige para operar com integridade máxima (ex: estoque atômico, chaves de licença seguras, prevenção de venda duplicada, webhooks com assinatura criptográfica, idempotência em pagamentos).
+   - O `@Designer` e o `@Frontend` já entregam a interface com os padrões visuais mais modernos, responsividade, feedback instantâneo e estados completos de tela.
+   - O `@AppSec` já fecha as portas de ataque típicas daquele modelo de negócio.
+
+---
+
+## 3. Princípios de Engenharia Inegociáveis (Anti-Patterns Proibidos)
 1. **Zero Fake In-Memory Testing:** É terminantemente proibido o uso de `EF Core InMemory` para testes de banco. Todos os testes de repositório e integração devem validar SQL e constraints reais contra o PostgreSQL no `Testcontainers`.
 2. **Zero Naked Primitives no Domínio:** IDs, e-mails, documentos e valores monetários devem ser encapsulados em *Value Objects* ou *Strongly Typed IDs* com validação em tempo de instanciação.
 3. **Zero Leaking de Camadas:** A camada `Domain` nunca referencia `Infrastructure`, `EntityFramework` ou `AspNetCore`. Controllers nunca injetam `DbContext` ou manipulam queries LINQ.
 4. **Zero Untyped Payloads:** Comunicação entre frontend e backend segue rigorosamente schemas sincronizados (`DTO C#` $\leftrightarrow$ `Zod Schema` $\leftrightarrow$ `TypeScript Interface`).
-5. **Zero Silent Drops & Ambiguous Requirements:** Nenhum agente aceita requisitos vagos ("o sistema deve ser rápido") ou suprime erros em blocos `catch` vazios. Toda falha deve ser tipada e rastreável.
+5. **Zero Silent Drops & Ambiguous Requirements:** Nenhum agente aceita requisitos vagos ou suprime erros em blocos `catch` vazios. Toda falha deve ser tipada e rastreável.
 
 ---
 
-## 3. Matriz de Validação Cruzada (Quem Fiscaliza Quem)
+## 4. Matriz de Validação Cruzada (Quem Fiscaliza Quem)
 ```mermaid
 flowchart TD
-    PM["@PM (Visão de Negócio & JTBD)"] <-->|"Refinamento & Fatiamento BDD"| Coord["@Coord (Delivery & Contratos)"]
+    PM["@PM (Visão de Negócio & Benchmarking)"] <-->|"Refinamento BDD"| Coord["@Coord (Delivery & Contratos)"]
+    PM <-->|"Jornada & UX"| Designer["@Designer (UI/UX & Design System)"]
+    Designer -->|"Tokens, Bento Grids & Specs"| Frontend["@Frontend (React 19 & shadcn/ui)"]
     Coord -->|"Contratos & Regras"| Backend["@Backend (.NET 10 Architecture)"]
-    Coord -->|"Contratos & Telas"| Frontend["@Frontend (React 19 & shadcn/ui)"]
+    Coord -->|"Contratos & Telas"| Frontend
     Backend <-->|"Auditoria LINQ & Índices Postgres"| DBA["@DBA (Postgres 17 & EF Core)"]
     Backend <-->|"Duelo Hacker: Ataque & Patch"| AppSec["@AppSec (Red / Blue Team)"]
     Frontend <-->|"Sanitização XSS & Proteção de Rotas"| AppSec
     Backend <-->|"Sincronismo DTOs & SignalR"| Frontend
-    Coord & AppSec & Backend -->|"Critérios BDD & PoCs de Ataque"| QA["@QA (Testcontainers & Playwright)"]
+    Coord & AppSec & Backend & Designer -->|"Critérios BDD, PoCs & A11y"| QA["@QA (Testcontainers & Playwright)"]
     DBA & Backend & Frontend & QA -->|"Artefatos & Quality Gates"| DevOps["@DevOps (Docker, SRE & CI/CD)"]
 ```
 
-1. **`@PM` define o *Porquê* $\leftrightarrow$ `@Coord` traduz para o *Como*:** Fatiamento vertical em PBIs (BDD + Fibonacci), garantindo que escopo supérfluo seja eliminado antes de virar código.
-2. **`@Backend` escreve C# $\leftrightarrow$ `@DBA` audita EF Core e PostgreSQL:** Validação de queries geradas, prevenção de N+1, uso de `AsNoTracking`, projeções seletivas e criação de índices ideais.
-3. **`@Backend` & `@Frontend` criam fluxos $\leftrightarrow$ `@AppSec` tenta invadir e blinda:** Execução de Threat Modeling (STRIDE), caça a BOLA/IDOR, Mass Assignment, CSRF e XSS, fornecendo patches imediatos.
-4. **`@Backend` define DTOs $\leftrightarrow$ `@Frontend` consome com Zod e shadcn/ui:** Interface responsiva com os 4 estados obrigatórios (Skeleton, Empty, Error e Optimistic Success).
-5. **`@Coord` + `@AppSec` definem critérios e vetores $\leftrightarrow$ `@QA` codifica automação:** Testes unitários com Bogus, testes de integração reais no Testcontainers (incluindo replay de ataques) e testes E2E multi-aba no Playwright.
+1. **`@PM` + `@Designer` definem o *Porquê* e o *Visual* $\leftrightarrow$ `@Coord` traduz para o *Como*:** Fatiamento vertical em PBIs (BDD + Fibonacci), garantindo que escopo supérfluo seja eliminado e a estética seja de alto padrão.
+2. **`@Designer` especifica o Design System $\leftrightarrow$ `@Frontend` implementa:** Tokens semânticos, Bento Grids, Dark mode imersivo e os 4 estados obrigatórios de tela (Skeleton, Empty, Error, Success).
+3. **`@Backend` escreve C# $\leftrightarrow$ `@DBA` audita EF Core e PostgreSQL:** Validação de queries geradas, prevenção de N+1, uso de `AsNoTracking`, projeções seletivas e criação de índices ideais.
+4. **`@Backend` & `@Frontend` criam fluxos $\leftrightarrow$ `@AppSec` tenta invadir e blinda:** Execução de Threat Modeling (STRIDE), caça a BOLA/IDOR, Mass Assignment, CSRF e XSS, fornecendo patches imediatos.
+5. **`@Coord` + `@AppSec` + `@Designer` definem critérios $\leftrightarrow$ `@QA` codifica automação:** Testes unitários com Bogus, testes de integração reais no Testcontainers, concorrência e testes E2E com acessibilidade `@axe-core/playwright`.
 6. **`@DBA` + `@Backend` + `@Frontend` + `@QA` entregam artefatos $\leftrightarrow$ `@DevOps` empacota e automatiza:** Containers non-root, Migration Bundles controlados, observabilidade OpenTelemetry e pipeline no GitHub Actions.
 
 ---
 
-## 4. Regras Oficiais de Desempate de Conflitos Técnicos (Tie-Breaking Rulebook)
+## 5. Regras Oficiais de Desempate de Conflitos Técnicos (Tie-Breaking Rulebook)
 Quando os especialistas do esquadrão divergirem em decisões técnicas, o `@Coord` arbitra seguindo esta hierarquia inegociável de prioridades:
 $$\text{Segurança e Conformidade} > \text{Integridade e Consistência dos Dados} > \text{Resiliência e Desempenho} > \text{Experiência do Usuário (UX)} > \text{Velocidade de Escrita do Código}$$
-
-- **`@Backend` vs `@DBA` (Ex.: Normalização Relacional vs JSONB desnormalizado):** O `@DBA` tem a palavra final para dados transacionais estruturados. `JSONB` só é aceito com schema semi-estruturado comprovado e índice GIN justificado.
-- **`@Frontend` vs `@Backend` (Ex.: Estrutura de Payload e Agregação):** O `@Frontend` nunca deve fazer 3 requisições encadeadas para montar uma única visualização. O `@Backend` deve fornecer um DTO de projeção otimizado ou endpoint agregador.
-- **`@PM` vs `@AppSec` (Ex.: Fricção de MFA ou Restrições de Senha vs Conversão):** O `@AppSec` prevalece em dados sensíveis e transações financeiras. O `@PM` pode propor mecanismos de segurança adaptativa (step-up auth), mas nunca desligar validações.
