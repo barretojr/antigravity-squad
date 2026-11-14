@@ -179,7 +179,7 @@ def find_ui_jargon_leaks(root: Path, files: list[str]) -> list[dict[str, Any]]:
 def inspect_project(args: dict[str, Any]) -> dict[str, Any]:
     root = project_root(args.get("project_root", ""))
     docs_dir = get_docs_dir(root)
-    ignored = {".git", ".agents", "node_modules", ".venv", "bin", "obj"}
+    ignored = {".git", ".agents", ".agentes", ".squad", "node_modules", ".venv", "bin", "obj", "dist", "build", ".next", ".output"}
     files: list[str] = []
     for current, dirs, names in os.walk(root):
         dirs[:] = sorted(d for d in dirs if d not in ignored)
@@ -269,7 +269,7 @@ def inspect_project(args: dict[str, Any]) -> dict[str, Any]:
 def audit_code_delivery(args: dict[str, Any]) -> dict[str, Any]:
     """Ferramenta mecânica para os Críticos de Código: audita armadilhas, mocks, timers e fake metrics."""
     root = project_root(args.get("project_root", ""))
-    ignored = {".git", ".agents", "node_modules", ".venv", "bin", "obj"}
+    ignored = {".git", ".agents", ".agentes", ".squad", "node_modules", ".venv", "bin", "obj", "dist", "build", ".next", ".output"}
     files: list[str] = []
     for current, dirs, names in os.walk(root):
         dirs[:] = sorted(d for d in dirs if d not in ignored)
@@ -283,8 +283,8 @@ def audit_code_delivery(args: dict[str, Any]) -> dict[str, Any]:
     for leak in jargon_leaks:
         findings.append(f"Vazamento de Jargão Técnico na UI ({leak['file']}): {leak['matches']}")
 
-    # 2. Trapaças no Frontend: timers, random IDs, métricas inventadas
-    timer_pattern = re.compile(r'setTimeout\s*\([^,]+,\s*(?:[5-9]\d{2}|\d{4,})\)', re.IGNORECASE)
+    # 2. Trapaças no Frontend: timers simulando rede, random IDs, métricas inventadas
+    timer_pattern = re.compile(r'setIs\w+\(true\)[^;]*;\s*setTimeout|setTimeout\s*\(\s*\(\)\s*=>\s*\{[^}]*set(?:Offers|Links|Converted|Products|Data)', re.DOTALL | re.IGNORECASE)
     random_id_pattern = re.compile(r'Math\.random\(\)\.toString\(36\)', re.IGNORECASE)
     fake_metrics_pattern = re.compile(r'(?:1[,.]248|24[,.]590|R\$\s*3[,.]840)', re.IGNORECASE)
 
@@ -393,7 +393,7 @@ def validate_artifacts(args: dict[str, Any]) -> dict[str, Any]:
     issues: list[str] = []
 
     # Localiza arquivos do projeto para verificar jargões
-    ignored = {".git", ".agents", "node_modules", ".venv", "bin", "obj"}
+    ignored = {".git", ".agents", ".agentes", ".squad", "node_modules", ".venv", "bin", "obj", "dist", "build", ".next", ".output"}
     proj_files: list[str] = []
     for current, dirs, names in os.walk(root):
         dirs[:] = sorted(d for d in dirs if d not in ignored)
