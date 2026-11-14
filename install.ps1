@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [string]$TargetProject,
     [switch]$Global
@@ -65,6 +65,17 @@ if (-not (Test-Path -LiteralPath $TargetProject -PathType Container)) {
 $DestDir = Join-Path $TargetProject '.agents'
 New-Item -ItemType Directory -Path $DestDir -Force | Out-Null
 Copy-SquadTo -DestinationRoot $DestDir
+
+# Garante .squad/ no .gitignore do projeto
+$GitIgnorePath = Join-Path $TargetProject '.gitignore'
+if (Test-Path -LiteralPath $GitIgnorePath) {
+    $GitIgnoreContent = Get-Content -LiteralPath $GitIgnorePath -Raw
+    if ($GitIgnoreContent -notmatch '\.squad') {
+        Add-Content -LiteralPath $GitIgnorePath -Value "`n# Antigravity Squad artifacts`n.squad/`n.agentes/"
+        Write-Host "Adicionado .squad/ ao .gitignore de $TargetProject" -ForegroundColor Cyan
+    }
+}
+
 Write-Host "Squad instalado no workspace: $DestDir" -ForegroundColor Green
 Write-Host 'Reabra ou recarregue o Antigravity e invoque /antigravity-squad.'
 Write-Host "MCP server: python `"$(Join-Path $DestDir 'mcp\server.py')`" (stdio)"

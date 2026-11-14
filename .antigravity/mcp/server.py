@@ -242,7 +242,14 @@ def inspect_project(args: dict[str, Any]) -> dict[str, Any]:
     # 3. Auditoria de Configurações e Segredos
     config_files = [f for f in files if any(f.endswith(name) for name in (".env", ".env.example", "appsettings.json", "appsettings.Development.json", "config.yaml"))]
 
-    # 4. Auditoria de Jargão Técnico na UI
+    # 4. Auditoria de .gitignore para a pasta de documentação
+    gitignore_path = root / ".gitignore"
+    gitignore_has_docs = False
+    if gitignore_path.exists():
+        gi_txt = gitignore_path.read_text(encoding="utf-8", errors="ignore")
+        gitignore_has_docs = (f"{docs_dir}/" in gi_txt) or (docs_dir in gi_txt.splitlines())
+
+    # 5. Auditoria de Jargão Técnico na UI
     jargon_leaks = find_ui_jargon_leaks(root, files)
 
     return {
@@ -260,6 +267,7 @@ def inspect_project(args: dict[str, Any]) -> dict[str, Any]:
             },
             "auth_status": auth_status,
             "config_files": config_files,
+            "gitignore_has_docs": gitignore_has_docs,
             "ui_tech_jargon_leaks": jargon_leaks
         },
         "files": files
@@ -351,6 +359,19 @@ def initialize_docs(args: dict[str, Any]) -> dict[str, Any]:
             content = f"# {agent.replace('_', ' ').title()} — Relatório\n\n- **Status:** PLANEJADO\n- **Atualizado em:** {date.today().isoformat()}\n- **Demanda/roadmap:** [preencher]\n- **Responsabilidade:** {agent}\n\n" + extra + BASE_SECTIONS
         target.write_text(content, encoding="utf-8", newline="\n")
         created.append(f"{docs_dir}/{relative}")
+
+    # Garante automaticamente que a pasta de documentação esteja no .gitignore do projeto
+    gitignore_path = root / ".gitignore"
+    if gitignore_path.exists():
+        gi_content = gitignore_path.read_text(encoding="utf-8", errors="ignore")
+        if f"{docs_dir}/" not in gi_content and docs_dir not in gi_content.splitlines():
+            with open(gitignore_path, "a", encoding="utf-8") as gf:
+                if not gi_content.endswith("\n") and gi_content:
+                    gf.write("\n")
+                gf.write(f"\n# Antigravity Squad artifacts\n{docs_dir}/\n")
+    else:
+        gitignore_path.write_text(f"# Antigravity Squad artifacts\n{docs_dir}/\n", encoding="utf-8")
+
     return {"project_root": str(root), "docs_dir": docs_dir, "created": created, "preserved_existing": True}
 
 
@@ -448,6 +469,15 @@ def validate_artifacts(args: dict[str, Any]) -> dict[str, Any]:
             issues.append(f"Seções obrigatórias ausentes em {rel}: {', '.join(sections_missing)}")
         if broken_links:
             issues.append(f"Links locais sem evidência em {rel}: {', '.join(broken_links)}")
+
+    # Validação mandatória de .gitignore para a pasta de documentação
+    gitignore_path = root / ".gitignore"
+    if gitignore_path.exists():
+        gi_content = gitignore_path.read_text(encoding="utf-8", errors="ignore")
+        if f"{docs_dir}/" not in gi_content and docs_dir not in gi_content.splitlines():
+            issues.append(f"Aviso de Git: A pasta '{docs_dir}/' não está no .gitignore. Adicione '{docs_dir}/' ao .gitignore do projeto.")
+    else:
+        issues.append(f"Aviso de Git: Arquivo .gitignore ausente. Crie um .gitignore contendo '{docs_dir}/'.")
 
     return {"valid": not issues, "issues": issues, "artifacts": results, "ui_jargon_leaks_count": len(ui_jargon_leaks), "docs_dir": docs_dir}
 

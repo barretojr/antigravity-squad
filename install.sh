@@ -60,6 +60,16 @@ if [[ ! -d "$target_project" ]]; then
   exit 1
 fi
 copy_squad_to "$target_project/.agents"
+
+# Garante .squad/ no .gitignore do projeto
+gitignore_path="$target_project/.gitignore"
+if [[ -f "$gitignore_path" ]]; then
+  if ! grep -q "\.squad" "$gitignore_path"; then
+    printf "\n# Antigravity Squad artifacts\n.squad/\n.agentes/\n" >> "$gitignore_path"
+    echo "Adicionado .squad/ ao .gitignore de $target_project"
+  fi
+fi
+
 echo "Squad instalado no workspace: $target_project/.agents"
 echo "Reabra ou recarregue o Antigravity e invoque /antigravity-squad."
 echo "MCP server: python3 '$target_project/.agents/mcp/server.py' (stdio)"
