@@ -43,10 +43,32 @@ chmod +x install.sh
 
 Instalação global publica agentes, regras, comandos e skills em `~/.gemini/config/` e mantém a skill principal no caminho legado do CLI. Reabra ou recarregue o Antigravity após instalar.
 
+## MCP server
+
+Os instaladores também distribuem o servidor stdio em `.agents/mcp/server.py` no projeto-alvo (ou em `~/.gemini/config/mcp/server.py` na instalação global). Ele não depende de pacotes externos e requer Python 3.10 ou mais recente. Configure o cliente MCP para iniciar o processo com o caminho instalado, por exemplo:
+
+```json
+{
+  "mcpServers": {
+    "antigravity-squad": {
+      "command": "python",
+      "args": ["C:/Projetos/MinhaApp/.agents/mcp/server.py"]
+    }
+  }
+}
+```
+
+Em Linux/macOS, use `python3` e o caminho POSIX equivalente. Na instalação global, substitua o caminho por `~/.gemini/config/mcp/server.py`. Reinicie o cliente MCP para carregar o servidor.
+
+As ferramentas são `inspect_project`, `initialize_squad_docs`, `update_agent_report`, `update_roadmap` e `validate_squad_artifacts`. Cada uma recebe `project_root`. Inspecionar e validar são somente leitura; as demais escrevem exclusivamente em `.agentes/` sob essa raiz, rejeitando caminhos absolutos, travessia e symlinks que escapem da pasta. A inicialização preserva arquivos existentes. Relatórios e roadmap são fornecidos como conteúdo completo.
+
+O MCP automatiza inspeção e manutenção de artefatos; não executa os onze agentes nem simula subagentes. A skill continua orientando processo, critérios, papéis e limites. Use-a junto do servidor quando o cliente suportar skills; caso contrário, consulte `.agents/skills/antigravity-squad/SKILL.md` instalado.
+
 ## Estrutura
 
 ```text
 .antigravity/
+├── mcp/                    # servidor MCP stdio sem dependências externas
 ├── agents/                 # onze perfis de agente
 ├── commands/               # alias /teamwork
 ├── rules/                  # contexto e limites compartilhados

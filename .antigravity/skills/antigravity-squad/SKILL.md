@@ -14,6 +14,12 @@ Coordene uma mesa-redonda de onze especialidades. O fluxo padrão tem duas fases
 1. **Planejamento:** os onze subagentes analisam em paralelo e cada um grava seu relatório `.md` no projeto. `@Coord` consolida as decisões num roadmap único. Não altere código de produto nessa fase.
 2. **Execução:** aguarde o usuário escolher itens do roadmap. Implemente somente os itens selecionados e atualize nos relatórios o que foi realmente feito e validado.
 
+## Uso via MCP
+
+O servidor em `.antigravity/mcp/server.py` expõe ferramentas para inspecionar arquivos e marcadores de stack, inicializar `.agentes/`, atualizar um relatório ou roadmap e validar os artefatos. Ele não invoca subagentes. Na rodada de planejamento, use os perfis abaixo apenas se o cliente realmente oferecer capacidade de subagentes; caso contrário, informe essa limitação e não atribua achados a agentes que não foram executados. O MCP cria e valida os documentos, mas não substitui pesquisa, análise especializada ou validação humana.
+
+Todas as ferramentas recebem a raiz do projeto-alvo. As ferramentas de escrita só criam ou atualizam arquivos em `.agentes/` dentro dessa raiz. Inicialização preserva documentos existentes; atualizações recebem o conteúdo completo do arquivo.
+
 ## Stack de referência
 
 Mantenha foco em .NET 10/C#, PostgreSQL 17+/Npgsql e React 19/TypeScript/Vite/shadcn-ui. Inclua xUnit, Testcontainers, Playwright, Docker e GitHub Actions quando fizerem parte do produto.

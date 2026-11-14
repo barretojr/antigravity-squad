@@ -7,7 +7,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $SourceDir = Join-Path $ScriptDir '.antigravity'
-$Kinds = @('agents', 'rules', 'skills', 'commands')
+$Kinds = @('agents', 'rules', 'skills', 'commands', 'mcp')
 
 if (-not (Test-Path -LiteralPath $SourceDir -PathType Container)) {
     throw "Pasta fonte '.antigravity' não encontrada em: $ScriptDir"
@@ -37,6 +37,7 @@ function Copy-ToGlobalConfig {
     New-Item -ItemType Directory -Path $LegacySkillDir -Force | Out-Null
     Copy-Item -Path (Join-Path $SourceDir 'skills\antigravity-squad\*') -Destination $LegacySkillDir -Recurse -Force
     Write-Host "Squad instalado globalmente em $ConfigDir." -ForegroundColor Green
+    Write-Host "MCP server: python `"$(Join-Path $ConfigDir 'mcp\server.py')`" (stdio)"
 }
 
 if ($Global) {
@@ -66,3 +67,4 @@ New-Item -ItemType Directory -Path $DestDir -Force | Out-Null
 Copy-SquadTo -DestinationRoot $DestDir
 Write-Host "Squad instalado no workspace: $DestDir" -ForegroundColor Green
 Write-Host 'Reabra ou recarregue o Antigravity e invoque /antigravity-squad.'
+Write-Host "MCP server: python `"$(Join-Path $DestDir 'mcp\server.py')`" (stdio)"

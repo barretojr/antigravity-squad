@@ -3,7 +3,7 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source_dir="$script_dir/.antigravity"
-kinds=(agents rules skills commands)
+kinds=(agents rules skills commands mcp)
 
 if [[ ! -d "$source_dir" ]]; then
   echo "Erro: pasta fonte .antigravity não encontrada em $script_dir" >&2
@@ -32,6 +32,7 @@ install_global() {
   mkdir -p "$legacy_skill_dir"
   cp -R "$source_dir/skills/antigravity-squad/." "$legacy_skill_dir/"
   echo "Squad instalado globalmente em $config_dir"
+  echo "MCP server: python3 '$config_dir/mcp/server.py' (stdio)"
 }
 
 if [[ "${1:-}" == "--global" || "${1:-}" == "-g" ]]; then
@@ -61,3 +62,4 @@ fi
 copy_squad_to "$target_project/.agents"
 echo "Squad instalado no workspace: $target_project/.agents"
 echo "Reabra ou recarregue o Antigravity e invoque /antigravity-squad."
+echo "MCP server: python3 '$target_project/.agents/mcp/server.py' (stdio)"
