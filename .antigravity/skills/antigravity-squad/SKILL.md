@@ -16,9 +16,9 @@ Coordene uma mesa-redonda de onze especialidades. O fluxo padrão tem duas fases
 
 ## Uso via MCP
 
-O servidor em `.antigravity/mcp/server.py` expõe ferramentas para inspecionar arquivos e marcadores de stack com auditoria de arquitetura (persistência em banco, autenticação/criptografia, gestão de configurações e detector de jargão técnico na UI), inicializar `.agentes/` com seções aprofundadas por especialidade, atualizar relatórios e roadmap e validar a integridade técnica dos artefatos. Ele não invoca subagentes. Na rodada de planejamento, use os perfis abaixo apenas se o cliente realmente oferecer capacidade de subagentes; caso contrário, informe essa limitação e não atribua achados a agentes que não foram executados. O MCP cria e valida os documentos, mas não substitui pesquisa, análise especializada ou validação humana.
+O servidor em `.antigravity/mcp/server.py` expõe ferramentas para inspecionar arquivos e marcadores de stack com auditoria de arquitetura (`inspect_project`), auditar mecanicamente o código contra mocks e fake metrics (`audit_code_delivery`), inicializar `.squad/` com seções aprofundadas por especialidade (`initialize_squad_docs`), atualizar relatórios e roadmap (`update_agent_report`, `update_roadmap`) e validar a integridade técnica dos artefatos (`validate_squad_artifacts`). Ele apoia os dois críticos de código (`code_critic_blind` e `code_critic_spec`) no debate e validação das entregas.
 
-Todas as ferramentas recebem a raiz do projeto-alvo. As ferramentas de escrita só criam ou atualizam arquivos em `.agentes/` dentro dessa raiz. Inicialização preserva documentos existentes; atualizações recebem o conteúdo completo do arquivo. O validador rejeita persistência puramente em memória marcada como concluída e aponta vazamentos de jargão de dev no frontend.
+Todas as ferramentas recebem a raiz do projeto-alvo. As ferramentas de escrita criam ou atualizam arquivos exclusivamente em `.squad/` (com suporte retrocompatível para `.agentes/`). O validador rejeita persistência puramente em memória marcada como concluída e aponta vazamentos de jargão de dev no frontend.
 
 ## Stack de referência
 

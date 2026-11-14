@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Small, dependency-free MCP stdio server for Antigravity Squad artifacts and architecture auditing."""
+"""Small, dependency-free MCP stdio server for Antigravity Squad artifacts, architecture auditing and adversarial code review."""
 from __future__ import annotations
 
 import json
@@ -23,6 +23,8 @@ AGENTS = {
     "appsec": "seguranca/appsec.md",
     "qa": "qualidade/qa.md",
     "devops": "operacao/devops.md",
+    "code_critic_blind": "qualidade/critica-cega-codigo.md",
+    "code_critic_spec": "qualidade/critica-especificacao-roadmap.md",
 }
 
 BASE_SECTIONS = """## Contexto e evidências
@@ -61,11 +63,11 @@ Não executado.
 ROLE_EXTRA_SECTIONS = {
     "pm": """## Pesquisa de APIs e Integrações
 
-[Mapeamento das APIs oficiais de marketplaces (Mercado Livre, Shopee, Amazon, TikTok) e WhatsApp Business Cloud API oficial.]
+[Mapeamento das APIs oficiais de marketplaces (Mercado Livre Developers, Shopee Open Platform, Amazon Creator PA-API, TikTok Shop Partner) e WhatsApp Business Cloud API oficial da Meta.]
 
 ## Gestão de Credenciais e Configurações
 
-[Especificação da tela/fluxo onde o usuário configura chaves de API, webhooks e credenciais com segurança.]
+[Especificação da tela/módulo de Conexões onde o usuário cadastra chaves de API, webhooks e tokens com segurança.]
 """,
     "dba": """## Mecanismo de Persistência Físico
 
@@ -81,7 +83,31 @@ ROLE_EXTRA_SECTIONS = {
 """,
     "designer": """## Linguagem do Usuário e Anti-Jargão
 
-[Vocabulário estritamente voltado ao domínio de negócio e à jornada do usuário, eliminando tech-jargon.]
+[Vocabulário estritamente voltado ao domínio de negócio e à jornada do usuário, eliminando tech-jargon e métricas falsas.]
+""",
+    "code_critic_blind": """## Veredito do Auditor Cego (Adversarial)
+
+[APROVADO ou REPROVADO com base na análise fria do diff e código-fonte, sem contaminação de contexto.]
+
+## Violações de Qualidade e Anti-Patterns Detectados
+
+[Apontamento implacável de mocks, fake data, fake metrics, timers simulados, falhas de persistência ou segurança.]
+
+## Pontos para Confronto com o Auditor de Requisitos
+
+[Dúvidas e questionamentos técnicos a serem debatidos com o auditor de especificação.]
+""",
+    "code_critic_spec": """## Veredito do Auditor de Requisitos
+
+[APROVADO ou REPROVADO quanto à fidelidade ao roadmap.md e pesquisa do PM.]
+
+## Aderência ao Roadmap e PRD
+
+[Checagem item a item se o que foi entregue atende aos critérios de aceite ou se atalhos foram tomados.]
+
+## Síntese do Debate com o Auditor Cego
+
+[Confronto entre as exigências técnicas do auditor cego e a viabilidade do escopo contratado.]
 """,
 }
 
@@ -91,6 +117,8 @@ ROLE_REQUIRED_HEADINGS = {
     "appsec": ["Autenticação e Criptografia"],
     "frontend": ["Linguagem do Usuário e Anti-Jargão"],
     "designer": ["Linguagem do Usuário e Anti-Jargão"],
+    "code_critic_blind": ["Veredito do Auditor Cego (Adversarial)", "Violações de Qualidade e Anti-Patterns Detectados"],
+    "code_critic_spec": ["Veredito do Auditor de Requisitos", "Aderência ao Roadmap e PRD"],
 }
 
 JARGON_PATTERN = re.compile(
@@ -124,6 +152,15 @@ def safe_path(root: Path, relative: str, *, allow_missing: bool = True) -> Path:
     return resolved
 
 
+def get_docs_dir(root: Path) -> str:
+    """Retorna .squad como padrão; preserva .agentes apenas se já existir e .squad não."""
+    if (root / ".squad").is_dir():
+        return ".squad"
+    if (root / ".agentes").is_dir():
+        return ".agentes"
+    return ".squad"
+
+
 def find_ui_jargon_leaks(root: Path, files: list[str]) -> list[dict[str, Any]]:
     leaks = []
     for rel in files:
@@ -141,6 +178,7 @@ def find_ui_jargon_leaks(root: Path, files: list[str]) -> list[dict[str, Any]]:
 
 def inspect_project(args: dict[str, Any]) -> dict[str, Any]:
     root = project_root(args.get("project_root", ""))
+    docs_dir = get_docs_dir(root)
     ignored = {".git", ".agents", "node_modules", ".venv", "bin", "obj"}
     files: list[str] = []
     for current, dirs, names in os.walk(root):
@@ -209,6 +247,7 @@ def inspect_project(args: dict[str, Any]) -> dict[str, Any]:
 
     return {
         "project_root": str(root),
+        "docs_dir": docs_dir,
         "file_count_listed": len(files),
         "truncated": len(files) >= 5000,
         "stack_markers": stacks,
@@ -227,15 +266,76 @@ def inspect_project(args: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def audit_code_delivery(args: dict[str, Any]) -> dict[str, Any]:
+    """Ferramenta mecânica para os Críticos de Código: audita armadilhas, mocks, timers e fake metrics."""
+    root = project_root(args.get("project_root", ""))
+    ignored = {".git", ".agents", "node_modules", ".venv", "bin", "obj"}
+    files: list[str] = []
+    for current, dirs, names in os.walk(root):
+        dirs[:] = sorted(d for d in dirs if d not in ignored)
+        for name in sorted(names):
+            files.append(Path(current, name).relative_to(root).as_posix())
+
+    findings: list[str] = []
+
+    # 1. Vazamento de jargão de dev
+    jargon_leaks = find_ui_jargon_leaks(root, files)
+    for leak in jargon_leaks:
+        findings.append(f"Vazamento de Jargão Técnico na UI ({leak['file']}): {leak['matches']}")
+
+    # 2. Trapaças no Frontend: timers, random IDs, métricas inventadas
+    timer_pattern = re.compile(r'setTimeout\s*\([^,]+,\s*(?:[5-9]\d{2}|\d{4,})\)', re.IGNORECASE)
+    random_id_pattern = re.compile(r'Math\.random\(\)\.toString\(36\)', re.IGNORECASE)
+    fake_metrics_pattern = re.compile(r'(?:1[,.]248|24[,.]590|R\$\s*3[,.]840)', re.IGNORECASE)
+
+    for f in files:
+        if any(f.endswith(ext) for ext in (".tsx", ".jsx", ".ts", ".js")) and not (f.startswith("tests/") or "node_modules" in f):
+            try:
+                full_path = safe_path(root, f)
+                txt = full_path.read_text(encoding="utf-8", errors="ignore")
+                if timer_pattern.search(txt):
+                    findings.append(f"Latência Simulada (setTimeout) em {f}. Proibido simular atraso de rede.")
+                if random_id_pattern.search(txt):
+                    findings.append(f"Geração Falsa de IDs (Math.random) em {f}. IDs devem vir do backend.")
+                if fake_metrics_pattern.search(txt):
+                    findings.append(f"Métricas Inventadas (Fake Metrics) em {f}. Remova números fictícios da interface.")
+            except Exception:
+                pass
+
+    # 3. Trapaças no Backend: empty catch, Thread.Sleep
+    empty_catch_pattern = re.compile(r'catch\s*\([^\)]*\)\s*\{\s*\}', re.IGNORECASE)
+    for f in files:
+        if f.endswith(".cs") or f.endswith(".go") or f.endswith(".py"):
+            try:
+                full_path = safe_path(root, f)
+                txt = full_path.read_text(encoding="utf-8", errors="ignore")
+                if empty_catch_pattern.search(txt):
+                    findings.append(f"Tratamento Vazio de Erro (empty catch) em {f}.")
+                if "Thread.Sleep" in txt:
+                    findings.append(f"Bloqueio síncrono (Thread.Sleep) em {f}.")
+            except Exception:
+                pass
+
+    verdict = "APROVADO" if not findings else "REPROVADO"
+    return {
+        "project_root": str(root),
+        "verdict": verdict,
+        "clean": not findings,
+        "findings_count": len(findings),
+        "findings": findings
+    }
+
+
 def initialize_docs(args: dict[str, Any]) -> dict[str, Any]:
     root = project_root(args.get("project_root", ""))
-    docs = safe_path(root, ".agentes")
+    docs_dir = get_docs_dir(root)
+    docs = safe_path(root, docs_dir)
     docs.mkdir(parents=True, exist_ok=True)
     created: list[str] = []
-    index = "# Documentação do Antigravity Squad\n\nDemanda: [preencher]\n\n## Relatórios\n\n" + "".join(
+    index = f"# Documentação do Antigravity Squad\n\nDemanda: [preencher]\n\n## Relatórios\n\n" + "".join(
         f"- [{name}](./{path})\n" for name, path in AGENTS.items()) + "\n## Roadmap\n\n- [Roadmap](./coordenacao/roadmap.md)\n"
     for relative in ["README.md", *AGENTS.values(), "coordenacao/roadmap.md", "PROJECT_MAP.md"]:
-        target = safe_path(root, f".agentes/{relative}")
+        target = safe_path(root, f"{docs_dir}/{relative}")
         target.parent.mkdir(parents=True, exist_ok=True)
         if target.exists():
             continue
@@ -250,18 +350,19 @@ def initialize_docs(args: dict[str, Any]) -> dict[str, Any]:
             extra = ROLE_EXTRA_SECTIONS.get(agent, "")
             content = f"# {agent.replace('_', ' ').title()} — Relatório\n\n- **Status:** PLANEJADO\n- **Atualizado em:** {date.today().isoformat()}\n- **Demanda/roadmap:** [preencher]\n- **Responsabilidade:** {agent}\n\n" + extra + BASE_SECTIONS
         target.write_text(content, encoding="utf-8", newline="\n")
-        created.append(f".agentes/{relative}")
-    return {"project_root": str(root), "created": created, "preserved_existing": True}
+        created.append(f"{docs_dir}/{relative}")
+    return {"project_root": str(root), "docs_dir": docs_dir, "created": created, "preserved_existing": True}
 
 
 def update_report(args: dict[str, Any]) -> dict[str, Any]:
     root = project_root(args.get("project_root", ""))
+    docs_dir = get_docs_dir(root)
     agent, content = args.get("agent"), args.get("content")
     if agent not in AGENTS:
         raise SquadError(f"agent deve ser um de: {', '.join(AGENTS)}")
     if not isinstance(content, str) or not content.strip():
         raise SquadError("content precisa conter o relatório completo")
-    rel = f".agentes/{AGENTS[agent]}"
+    rel = f"{docs_dir}/{AGENTS[agent]}"
     target = safe_path(root, rel)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(content, encoding="utf-8", newline="\n")
@@ -270,19 +371,22 @@ def update_report(args: dict[str, Any]) -> dict[str, Any]:
 
 def update_roadmap(args: dict[str, Any]) -> dict[str, Any]:
     root = project_root(args.get("project_root", ""))
+    docs_dir = get_docs_dir(root)
     content = args.get("content")
     if not isinstance(content, str) or not content.strip():
         raise SquadError("content precisa conter o roadmap completo")
-    target = safe_path(root, ".agentes/coordenacao/roadmap.md")
+    rel = f"{docs_dir}/coordenacao/roadmap.md"
+    target = safe_path(root, rel)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(content, encoding="utf-8", newline="\n")
-    return {"updated": ".agentes/coordenacao/roadmap.md"}
+    return {"updated": rel}
 
 
 def validate_artifacts(args: dict[str, Any]) -> dict[str, Any]:
     root = project_root(args.get("project_root", ""))
-    required = [".agentes/README.md", ".agentes/coordenacao/roadmap.md",
-                *[f".agentes/{p}" for p in AGENTS.values()]]
+    docs_dir = get_docs_dir(root)
+    required = [f"{docs_dir}/README.md", f"{docs_dir}/coordenacao/roadmap.md",
+                *[f"{docs_dir}/{p}" for p in AGENTS.values()]]
     results = []
     base_required_sections = ["Contexto e evidências", "O que precisa ser feito", "Plano", "O que foi feito", "Validação", "Pendências"]
     evidence_links = re.compile(r"\[[^]]*\]\(([^)]+)\)")
@@ -304,10 +408,10 @@ def validate_artifacts(args: dict[str, Any]) -> dict[str, Any]:
         path = safe_path(root, rel)
         exists = path.is_file()
         content = path.read_text(encoding="utf-8", errors="replace") if exists else ""
-        
+
         # Identifica se é relatório de agente
-        agent_key = next((k for k, v in AGENTS.items() if f".agentes/{v}" == rel), None)
-        
+        agent_key = next((k for k, v in AGENTS.items() if f"{docs_dir}/{v}" == rel), None)
+
         sections_missing = []
         if agent_key:
             req_headings = list(base_required_sections)
@@ -345,19 +449,20 @@ def validate_artifacts(args: dict[str, Any]) -> dict[str, Any]:
         if broken_links:
             issues.append(f"Links locais sem evidência em {rel}: {', '.join(broken_links)}")
 
-    return {"valid": not issues, "issues": issues, "artifacts": results, "ui_jargon_leaks_count": len(ui_jargon_leaks)}
+    return {"valid": not issues, "issues": issues, "artifacts": results, "ui_jargon_leaks_count": len(ui_jargon_leaks), "docs_dir": docs_dir}
 
 
 TOOLS = [
-    {"name": "inspect_project", "description": "Lista arquivos do projeto-alvo, detecta stacks, audita persistência (DB), autenticação/criptografia, configs e vazamento de jargões na UI.", "inputSchema": {"type": "object", "properties": {"project_root": {"type": "string"}}, "required": ["project_root"]}},
-    {"name": "initialize_squad_docs", "description": "Cria .agentes com índice, relatórios especializados com seções profundas de integração e persistência, roadmap e mapa.", "inputSchema": {"type": "object", "properties": {"project_root": {"type": "string"}}, "required": ["project_root"]}},
-    {"name": "update_agent_report", "description": "Cria ou substitui o relatório completo de um agente em .agentes/.", "inputSchema": {"type": "object", "properties": {"project_root": {"type": "string"}, "agent": {"type": "string", "enum": list(AGENTS)}, "content": {"type": "string"}}, "required": ["project_root", "agent", "content"]}},
-    {"name": "update_roadmap", "description": "Cria ou substitui .agentes/coordenacao/roadmap.md.", "inputSchema": {"type": "object", "properties": {"project_root": {"type": "string"}, "content": {"type": "string"}}, "required": ["project_root", "content"]}},
+    {"name": "inspect_project", "description": "Lista arquivos, detecta stacks, audita persistência (DB), autenticação/criptografia, configs e vazamento de jargões na UI.", "inputSchema": {"type": "object", "properties": {"project_root": {"type": "string"}}, "required": ["project_root"]}},
+    {"name": "audit_code_delivery", "description": "Audita mecanicamente o código-fonte contra trapaças: setTimeout, Math.random fake IDs, fake metrics, empty catch e jargões na UI.", "inputSchema": {"type": "object", "properties": {"project_root": {"type": "string"}}, "required": ["project_root"]}},
+    {"name": "initialize_squad_docs", "description": "Cria .squad com índice, relatórios especializados, seções profundas de integração, os dois críticos, roadmap e mapa.", "inputSchema": {"type": "object", "properties": {"project_root": {"type": "string"}}, "required": ["project_root"]}},
+    {"name": "update_agent_report", "description": "Cria ou substitui o relatório completo de um agente em .squad/.", "inputSchema": {"type": "object", "properties": {"project_root": {"type": "string"}, "agent": {"type": "string", "enum": list(AGENTS)}, "content": {"type": "string"}}, "required": ["project_root", "agent", "content"]}},
+    {"name": "update_roadmap", "description": "Cria ou substitui .squad/coordenacao/roadmap.md.", "inputSchema": {"type": "object", "properties": {"project_root": {"type": "string"}, "content": {"type": "string"}}, "required": ["project_root", "content"]}},
     {"name": "validate_squad_artifacts", "description": "Verifica existência, seções especializadas, links de evidência, transparência de persistência do DBA e vazamento de jargão na UI.", "inputSchema": {"type": "object", "properties": {"project_root": {"type": "string"}}, "required": ["project_root"]}},
 ]
-HANDLERS = {"inspect_project": inspect_project, "initialize_squad_docs": initialize_docs,
-            "update_agent_report": update_report, "update_roadmap": update_roadmap,
-            "validate_squad_artifacts": validate_artifacts}
+HANDLERS = {"inspect_project": inspect_project, "audit_code_delivery": audit_code_delivery,
+            "initialize_squad_docs": initialize_docs, "update_agent_report": update_report,
+            "update_roadmap": update_roadmap, "validate_squad_artifacts": validate_artifacts}
 
 
 def respond(message: dict[str, Any]) -> dict[str, Any] | None:
@@ -366,7 +471,7 @@ def respond(message: dict[str, Any]) -> dict[str, Any] | None:
         return None
     if method == "initialize":
         return {"jsonrpc": "2.0", "id": ident, "result": {"protocolVersion": PROTOCOL_VERSION,
-                "capabilities": {"tools": {"listChanged": False}}, "serverInfo": {"name": "antigravity-squad", "version": "1.1.0"}}}
+                "capabilities": {"tools": {"listChanged": False}}, "serverInfo": {"name": "antigravity-squad", "version": "1.2.0"}}}
     if method == "ping":
         return {"jsonrpc": "2.0", "id": ident, "result": {}}
     if method == "tools/list":
