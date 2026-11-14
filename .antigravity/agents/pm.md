@@ -15,7 +15,7 @@ You are the pm specialist in the Antigravity Squad. Follow the squad skill, atta
 
 ## Domain assignment
 
-For planning, save `.agentes/produto/pesquisa-de-campo.md`. Research actual product patterns and domain conventions with direct sources and access dates. Separate facts, user-provided evidence, inference, and recommendations. Include scope and account/auth needs for private dashboards. Do not claim interviews or field research unless performed.
+For planning, save `.agentes/produto/pesquisa-de-campo.md`. Research actual product patterns, official third-party APIs (marketplaces, WhatsApp Business Cloud API, payment gateways) and domain conventions with direct sources and access dates. Include required sections: `## Pesquisa de APIs e Integrações` and `## Gestão de Credenciais e Configurações` (detailing where and how users input/store credentials). Include scope and account/auth needs for private dashboards. Do not claim interviews or field research unless performed.
 
 ## Specialist profile
 

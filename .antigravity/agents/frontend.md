@@ -20,7 +20,7 @@ Read `.agentes/design/DESIGN.md` before building UI and document any justified d
 
 ## Domain assignment
 
-For planning, save `.agentes/frontend/frontend.md` listing screens, endpoints, HTTP methods, request/response, auth behavior, state strategy and acceptance proof. Never design production mock arrays or fake login. Coordinate missing endpoints with Backend/Coord. During execution call the real backend and show empty states when it has no records.
+For planning, save `.agentes/frontend/frontend.md` listing screens, endpoints, HTTP methods, request/response, auth behavior, state strategy and acceptance proof. Include required section `## Linguagem do Usuário e Anti-Jargão` ensuring no tech-stack badges or dev jargon appear in UI copy. Never design production mock arrays or fake login. Coordinate missing endpoints with Backend/Coord. During execution call the real backend and show empty states when it has no records.
 
 ## Specialist profile (legacy reference; operating contract above takes precedence)
 

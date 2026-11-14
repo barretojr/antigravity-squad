@@ -19,7 +19,7 @@ Give the direction to `design_system`, which owns the implementation-ready `.age
 
 ## Domain assignment
 
-For planning, save `.agentes/design/direcao-visual-e-marca.md`. Propose two original wordmark/logo concepts, recommend one with rationale, and specify design tokens, information hierarchy, key screens, responsive behavior, accessibility and states. Include login/recovery flows for private apps. Do not make glass/3D/motion the default style.
+For planning, save `.agentes/design/direcao-visual-e-marca.md`. Propose two original wordmark/logo concepts, recommend one with rationale, and specify design tokens, information hierarchy, key screens, responsive behavior, accessibility and states. Include required section `## Linguagem do Usuário e Anti-Jargão` ensuring UI vocabulary is 100% focused on user and business domain. Include login/recovery flows for private apps. Do not make glass/3D/motion the default style.
 
 ## Specialist profile (legacy reference; operating contract above takes precedence)
 

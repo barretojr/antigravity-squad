@@ -60,7 +60,11 @@ Os instaladores também distribuem o servidor stdio em `.agents/mcp/server.py` n
 
 Em Linux/macOS, use `python3` e o caminho POSIX equivalente. Na instalação global, substitua o caminho por `~/.gemini/config/mcp/server.py`. Reinicie o cliente MCP para carregar o servidor.
 
-As ferramentas são `inspect_project`, `initialize_squad_docs`, `update_agent_report`, `update_roadmap` e `validate_squad_artifacts`. Cada uma recebe `project_root`. Inspecionar e validar são somente leitura; as demais escrevem exclusivamente em `.agentes/` sob essa raiz, rejeitando caminhos absolutos, travessia e symlinks que escapem da pasta. A inicialização preserva arquivos existentes. Relatórios e roadmap são fornecidos como conteúdo completo.
+As ferramentas são `inspect_project`, `initialize_squad_docs`, `update_agent_report`, `update_roadmap` e `validate_squad_artifacts`. Cada uma recebe `project_root`. Inspecionar e validar são somente leitura; as demais escrevem exclusivamente em `.agentes/` sob essa raiz, rejeitando caminhos absolutos, travessia e symlinks que escapem da pasta.
+
+O `inspect_project` agora realiza auditoria arquitetural profunda: detecta persistência real (PostgreSQL, SQLite, Docker, migrations) alertando sobre estado em memória; audita se há autenticação e criptografia configuradas; checa arquivos de credenciais/configurações (.env, appsettings); e escaneia o frontend contra vazamentos de jargão de dev na UI (ex: `.NET 10`, `React 19`, `no Backend`).
+
+O `validate_squad_artifacts` exige seções especializadas em cada agente (pesquisa de APIs e gestão de credenciais no PM, transparência de persistência física no DBA, autenticação e criptografia no AppSec, anti-jargão no Frontend/Designer) e rejeita persistência em memória marcada como concluída. A inicialização preserva arquivos existentes. Relatórios e roadmap são fornecidos como conteúdo completo.
 
 O MCP automatiza inspeção e manutenção de artefatos; não executa os onze agentes nem simula subagentes. A skill continua orientando processo, critérios, papéis e limites. Use-a junto do servidor quando o cliente suportar skills; caso contrário, consulte `.agents/skills/antigravity-squad/SKILL.md` instalado.
 

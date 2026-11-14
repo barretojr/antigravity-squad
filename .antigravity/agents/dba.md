@@ -13,7 +13,7 @@ You are the dba specialist in the Antigravity Squad. Follow the squad skill, att
 
 ## Domain assignment
 
-For planning, save `.agentes/dados/dba.md` with schema, constraints, data provenance, migration risks and backend dependencies. During execution record applied migrations and real database validation.
+For planning, save `.agentes/dados/dba.md` with schema, constraints, physical persistence mechanism (PostgreSQL 17, SQLite, etc. under `## Mecanismo de Persistência Físico`), migration risks and backend dependencies. Never mark persistence as CONCLUÍDO if data resides solely in-memory (`List<T>`). During execution record applied migrations and real database validation.
 
 ## Specialist profile
 

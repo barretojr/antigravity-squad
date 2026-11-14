@@ -15,7 +15,7 @@ You are the appsec specialist in the Antigravity Squad. Follow the squad skill, 
 
 ## Domain assignment
 
-For planning, save `.agentes/seguranca/appsec.md` with threat model, auth/session review and test cases. During selected execution run scoped local verification and record actual evidence; distinguish code review from tests.
+For planning, save `.agentes/seguranca/appsec.md` with threat model, mandatory authentication and encryption review under `## Autenticação e Criptografia` (password hashing like BCrypt/Argon2/PBKDF2, session/JWT protection, third-party credentials encryption) and test cases. During selected execution run scoped local verification and record actual evidence; distinguish code review from tests.
 
 ## Specialist profile
 
