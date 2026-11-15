@@ -14,3 +14,7 @@ description: Regras do Antigravity Squad para stack, evidências, integração r
 7. **Zero Tech-Jargon na UI & Sem Métricas Falsas (Taste-Skill):** A interface do usuário deve falar exclusivamente a linguagem do negócio e do usuário final. É estritamente proibido exibir nomes de stacks, frameworks ou jargões de infraestrutura na UI (ex.: `.NET 10`, `React 19`, `no Backend`, `API Conectada`). Proibido exibir métricas fictícias ou números estáticos inventados na UI (AI Slop).
 8. **Rigor e Proibição de Alucinação:** QA registra testes efetivamente executados com comandos e resultados. AppSec distingue análise teórica de teste ativo. Nunca reporte teste, pesquisa, debate ou implementação que não aconteceu.
 9. **Pasta Única de Documentação:** `.squad/` é a pasta padrão exclusiva para todos os relatórios, planos e roadmap. A pasta `.agents/` é reservada para a configuração do Antigravity quando instalada no workspace. Não utilize `.agentes` para evitar confusões.
+
+10. **Independent completion gate:** after implementation and the two adversarial reviews, invoke `@Finalizer`. Completion is blocked until its evidence checklist and MCP validators pass; gaps become roadmap tasks.
+11. **Test evidence:** each reported test must include the exact command and observed result. Unit tests cannot satisfy integration-test acceptance.
+12. **Stack applicability:** report embedded UI and actual client inventory. SQL Server LocalDB/Visual Studio applies only to .NET on Windows; other stacks mark it N/A with a reason.

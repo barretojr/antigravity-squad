@@ -28,10 +28,10 @@ copy_squad_to() {
 install_global() {
   local config_dir="$HOME/.gemini/config"
   copy_squad_to "$config_dir"
-  local legacy_skill_dir="$HOME/.gemini/antigravity-cli/skills/antigravity-squad"
-  mkdir -p "$legacy_skill_dir"
-  cp -R "$source_dir/skills/antigravity-squad/." "$legacy_skill_dir/"
-  echo "Squad instalado globalmente em $config_dir"
+  local global_skills_dir="$HOME/.gemini/antigravity-cli/skills"
+  mkdir -p "$global_skills_dir"
+  cp -R "$source_dir/skills/." "$global_skills_dir/"
+  echo "Squad e skills instalados globalmente em $config_dir e $global_skills_dir"
   echo "MCP server: python3 '$config_dir/mcp/server.py' (stdio)"
 }
 

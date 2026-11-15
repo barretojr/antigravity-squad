@@ -1,21 +1,48 @@
 ---
 name: design-taste-frontend
-description: Applies product-specific art direction and a browser-based finish review to avoid generic frontend output
+description: Applies product-specific art direction, crafts high-taste frontend UI without AI slop, and provides audit heuristics, scripts, and asset kits.
 ---
-# Product-specific Frontend Art Direction
+# Product-Specific Frontend Art Direction (Taste Skill)
 
-Adapted from the public [taste-skill](https://github.com/leonxlnx/taste-skill) (MIT; see `UPSTREAM.md`). This skill carries over its useful principles, not its page-specific templates or scripts.
+Full integration of the [taste-skill](https://github.com/leonxlnx/taste-skill) suite. This skill equips Designer, Frontend, and Frontend Reviewer with principles, assets, scripts, and MCP audit tools to produce distinctive, high-craft web interfaces and eliminate generic "AI slop".
 
-## Before implementation
+## Bundled References & Tooling
 
-- Read `.agentes/design/direcao-visual-e-marca.md` and `.agentes/design/DESIGN.md`; resolve contradictions with Designer/Coord.
-- Name the product type and the primary user task. Use that to decide information density, imagery, tone and interaction.
-- Make the real product visible in context where useful. Prefer client-owned assets; otherwise select properly licensed imagery and record attribution. Do not use fake product UI, fake testimonials, fabricated metrics or decorative stock art that misrepresents the service.
-- Give each page one clear visual anchor and a deliberate hierarchy. Vary section composition only when it improves comprehension; avoid repeated card grids and decorative effects without a product reason.
-- Keep motion restrained, purposeful, keyboard-safe and compatible with reduced-motion preferences. Rich scenes or shaders require a clear product fit and must not obscure task completion.
+This skill bundles:
+1. **References (`references/`):**
+   - `copy-tells.md`: List of AI clichés and generic filler copy to avoid ("Unlock your potential", "Game-changing", etc.).
+   - `copy-voice.md` & `copy.md`: Concrete voice, tone, and microcopy guidance.
+   - `layout-v4.md` & `sections.md`: Section rhythm, visual anchors, hierarchy, and non-monotonous layouts.
+   - `moments.md`: Delightful microinteractions, feedback states, and tactile details.
+   - `motion.md`: Purposeful, keyboard-safe, reduced-motion-compliant CSS transitions.
+   - `system.md` & `sections-library.md`: Design system rules and reusable structural patterns.
+   - `perf.md`: Web vitals and performance heuristics.
+2. **Scripts (`scripts/`):**
+   - `consistency.mjs`: Checks UI token consistency.
+   - `copy-lint.mjs`: Lints strings for AI buzzwords and robotic placeholder prose.
+   - `gate.mjs`: Quality gate for design criteria.
+3. **Assets (`assets/`):**
+   - Reusable background treatments, component styles, motion curves, and system CSS/JS.
+4. **MCP Tool Integration:**
+   - Call `audit_frontend_taste` via the Antigravity Squad MCP server to automatically scan your frontend code for AI slop, hardcoded hex values, monotonous layouts, and missing accessibility considerations.
 
-## Review after implementation
+## Core Principles
 
-At desktop and mobile sizes, inspect the actual running page in a browser. Check alignment, clipping, text wrapping, section rhythm, image rendering/crop, navigation, forms, focus, contrast, reduced-motion behavior and all relevant UI states. Capture evidence and record actionable findings in `.agentes/frontend/revisao-visual.md`. Fix issues through the selected roadmap scope; do not declare visual success from source inspection alone.
+### 1. No "AI Slop"
+- **No generic purple-on-black floating card grids.** Match the color scheme, density, and surfaces to the specific product and users.
+- **No fake data or fabricated metrics.** Never invent fake revenue graphs, 99.9% uptime badges, or stock quotes. Show empty states when there is no data.
+- **No robotic copywriting.** Replace generic filler with concise, functional, user-centric language.
 
-This guidance is adaptable, not a pixel-perfect universal template. Follow the product-specific DESIGN.md and existing codebase conventions.
+### 2. Clear Visual Anchor & Rhythm
+- Every page and view must have one deliberate focal point (the primary user task or primary content).
+- Avoid repetitive 3-column card layouts where every element has equal visual weight. Vary density intentionally.
+
+### 3. Tactile Feedback & Microinteractions
+- Buttons, toggles, inputs, and tabs must have clear focus rings (`focus-visible`), active states, loading indicators, and tactile feedback.
+- Honor user preferences: all animations must respect `prefers-reduced-motion`.
+
+## Review Loop
+
+1. In development, inspect components in the browser at desktop (1440px) and mobile (390px) viewports.
+2. Run `audit_frontend_taste` to identify anti-patterns, contrast problems, or buzzwords.
+3. Record visual review findings in `.squad/frontend/revisao-visual.md` with concrete evidence.

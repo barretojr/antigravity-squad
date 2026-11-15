@@ -26,3 +26,5 @@ Crie esta pasta na raiz do projeto da cliente, ao lado do `.slnx`/`.sln` quando 
 Cada arquivo de agente contém: status e data; contexto/evidências; decisões e hipóteses; o que precisa ser feito; plano e dependências; o que foi feito (na fase de planejamento: nenhuma implementação de produto); validação com comandos e resultado real; pendências e links para fontes/IDs do roadmap. O agente dono atualiza o próprio relatório; Coord mantém o roadmap e o índice.
 
 Nunca grave segredos, tokens, credenciais, payloads pessoais ou dados de cliente sem anonimização nesses documentos. Não duplique pesquisa extensa: Coord referencia a pesquisa do PM e registra somente as decisões que dela decorrem.
+
+`.agentes/qualidade/finalizer.md` (or `.squad/qualidade/finalizer.md`) is the independent completion gate. It has one checklist row per required final check and records status plus evidence. It is not a substitute for QA, frontend review, or either code critic.

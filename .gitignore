@@ -22,3 +22,10 @@ $RECYCLE.BIN/
 .env
 .env.local
 *.secret
+
+# Dependencies & Build
+node_modules/
+**/node_modules/
+__pycache__/
+*.pyc
+

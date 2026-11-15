@@ -33,10 +33,10 @@ function Copy-ToGlobalConfig {
     $ConfigDir = Join-Path $HOME '.gemini\config'
     New-Item -ItemType Directory -Path $ConfigDir -Force | Out-Null
     Copy-SquadTo -DestinationRoot $ConfigDir
-    $LegacySkillDir = Join-Path $HOME '.gemini\antigravity-cli\skills\antigravity-squad'
-    New-Item -ItemType Directory -Path $LegacySkillDir -Force | Out-Null
-    Copy-Item -Path (Join-Path $SourceDir 'skills\antigravity-squad\*') -Destination $LegacySkillDir -Recurse -Force
-    Write-Host "Squad instalado globalmente em $ConfigDir." -ForegroundColor Green
+    $GlobalSkillsDir = Join-Path $HOME '.gemini\antigravity-cli\skills'
+    New-Item -ItemType Directory -Path $GlobalSkillsDir -Force | Out-Null
+    Copy-Item -Path (Join-Path $SourceDir 'skills\*') -Destination $GlobalSkillsDir -Recurse -Force
+    Write-Host "Squad e skills instalados globalmente em $ConfigDir e $GlobalSkillsDir." -ForegroundColor Green
     Write-Host "MCP server: python `"$(Join-Path $ConfigDir 'mcp\server.py')`" (stdio)"
 }
 

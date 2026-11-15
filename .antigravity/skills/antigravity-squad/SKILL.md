@@ -1,4 +1,4 @@
----
+﻿---
 name: antigravity-squad
 description: >-
   Planeja produto e engenharia com onze subagentes nativos em paralelo, pesquisa
@@ -79,3 +79,11 @@ Quando o usuário selecionar IDs ou pedir execução diretamente:
 6. Informe precisamente o que mudou, o que passou, o que falhou e o que ficou bloqueado. Nunca exiba selo de qualidade sem evidência.
 
 Não force pausas de sprint nem pergunte requisitos óbvios. Uma solicitação explícita para executar um item é autorização para executá-lo; pergunte só quando uma decisão ausente mudar materialmente o escopo, produto ou risco.
+
+## Gate final independente obrigatório — @Finalizer
+
+Depois da implementação, QA, revisão de browser e dos dois críticos de código, invoque `@Finalizer` como subagente independente. Ele inspeciona o estado final, preenche `.agentes/qualidade/finalizer.md` (ou `.squad/qualidade/finalizer.md`) e chama `validate_completion_checklist` e `validate_squad_artifacts`. Não peça ao implementador que aprove a própria entrega. Só declare o aplicativo concluído quando o gate MCP retornar `valid: true`; toda lacuna vira tarefa concreta no roadmap e bloqueia o aceite.
+
+O checklist cobre inventário real de projetos e existência de client separado; chamadas do browser para endpoints first-party reais; conexão e inicialização do banco local; connection string e acesso pelo Visual Studio/LocalDB quando .NET em Windows; migrations/schema; logs locais e exceções; build; testes unitários; testes de integração; e fluxos principais no browser. Cada linha exige `APROVADO`, `REPROVADO` ou `N/A` com evidência. N/A exige motivo. Testes exigem comando e resultado reais. Nunca infira execução por plano ou documentação.
+
+Regras por stack: detectar e relatar UI embutida no backend; confirmar client separado pelo inventário real de projetos/pacotes; não exigir SQL Server LocalDB fora de .NET/Windows; testes unitários não provam integração; não declarar build, browser, integração ou teste executado sem comando/cenário e resultado. Ambiente ausente ou fluxo não verificável bloqueia o aceite.
