@@ -523,8 +523,11 @@ def respond(message: dict[str, Any]) -> dict[str, Any] | None:
 
 def main() -> None:
     for line in sys.stdin:
+        line_clean = line.strip().lstrip("\ufeff")
+        if not line_clean:
+            continue
         try:
-            result = respond(json.loads(line))
+            result = respond(json.loads(line_clean))
             if result is not None:
                 sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")
                 sys.stdout.flush()
