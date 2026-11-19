@@ -6,11 +6,11 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$SourceDir = Join-Path $ScriptDir '.antigravity'
+$SourceDir = Join-Path $ScriptDir 'squad-kit'
 $Kinds = @('agents', 'rules', 'skills', 'commands', 'mcp')
 
 if (-not (Test-Path -LiteralPath $SourceDir -PathType Container)) {
-    throw "Pasta fonte '.antigravity' não encontrada em: $ScriptDir"
+    throw "Pasta fonte 'squad-kit' não encontrada em: $ScriptDir"
 }
 
 function Copy-SquadTo {
@@ -23,10 +23,10 @@ function Copy-SquadTo {
             Copy-Item -Path (Join-Path $From '*') -Destination $To -Recurse -Force
         }
     }
-    $SkillDir = Join-Path $DestinationRoot 'skills\antigravity-squad'
+    $SkillDir = Join-Path $DestinationRoot 'skills\squad'
     New-Item -ItemType Directory -Path $SkillDir -Force | Out-Null
-    Copy-Item -LiteralPath (Join-Path $SourceDir 'skills\antigravity-squad\SKILL.md') -Destination $SkillDir -Force
-    Copy-Item -Path (Join-Path $SourceDir 'skills\antigravity-squad\templates\*') -Destination (Join-Path $SkillDir 'templates') -Recurse -Force
+    Copy-Item -LiteralPath (Join-Path $SourceDir 'skills\squad\SKILL.md') -Destination $SkillDir -Force
+    Copy-Item -Path (Join-Path $SourceDir 'skills\squad\templates\*') -Destination (Join-Path $SkillDir 'templates') -Recurse -Force
 }
 
 function Copy-ToGlobalConfig {
@@ -71,11 +71,11 @@ $GitIgnorePath = Join-Path $TargetProject '.gitignore'
 if (Test-Path -LiteralPath $GitIgnorePath) {
     $GitIgnoreContent = Get-Content -LiteralPath $GitIgnorePath -Raw
     if ($GitIgnoreContent -notmatch '\.squad') {
-        Add-Content -LiteralPath $GitIgnorePath -Value "`n# Antigravity Squad artifacts`n.squad/`n.agentes/"
+        Add-Content -LiteralPath $GitIgnorePath -Value "`n# Squad artifacts`n.squad/`n.agentes/"
         Write-Host "Adicionado .squad/ ao .gitignore de $TargetProject" -ForegroundColor Cyan
     }
 }
 
 Write-Host "Squad instalado no workspace: $DestDir" -ForegroundColor Green
-Write-Host 'Reabra ou recarregue o Antigravity e invoque /antigravity-squad.'
+Write-Host 'Reabra ou recarregue o Antigravity e invoque /squad.'
 Write-Host "MCP server: python `"$(Join-Path $DestDir 'mcp\server.py')`" (stdio)"

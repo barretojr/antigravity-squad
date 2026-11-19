@@ -1,116 +1,106 @@
-# Antigravity Squad
+# Squad
 
-Mesa-redonda de onze agentes para descoberta, planejamento e execução de produto, com foco de referência em .NET 10, PostgreSQL 17 e React 19. Em projetos existentes, a equipe preserva a stack encontrada.
+Esquadrão de agentes que **entrevista você, planeja e constrói** uma aplicação ponta a ponta, provando o resultado com build e testes reais. Funciona no **Antigravity** e no **Claude Code**.
 
-## Fluxo
+A skill é agnóstica de domínio e de stack: tipo de negócio, banco, linguagem e integrações vêm da entrevista inicial e ficam registrados em `.squad/stack.md`. Em projetos existentes, a equipe preserva a stack encontrada.
 
-1. Instale as customizações no projeto ou globalmente.
-2. Invoque `/antigravity-squad` com a ideia, auditoria ou produto a evoluir.
-3. PM, Designer, Design System, Coord, DBA, Backend, Frontend, Frontend Reviewer, AppSec, QA e DevOps analisam em paralelo. Cada agente registra seu relatório e evidências em `.agentes/` no projeto trabalhado.
-4. Coord consolida as decisões e dependências em `.agentes/coordenacao/roadmap.md`. Planejamento não altera código do produto.
-5. Depois que você escolher itens, os agentes executam o escopo selecionado e atualizam os relatórios com arquivos e validações reais.
+## Como usar
 
-Use `/antigravity-squad`, não `/teamwork`, como fluxo principal. `/teamwork` permanece como alias compatível.
+```text
+/squad crie uma aplicação que <descreva o que ela faz>
+```
+ou, em linguagem natural: *"use a skill squad e crie ..."*.
 
-## Qualidade de produto
+1. **Entrevista (uma rodada):** stack (.NET, Node/TypeScript, Python, sem backend), frontend, **banco** (PostgreSQL, **Supabase**, SQL Server, SQLite), se já existe projeto Supabase, autenticação, integrações externas e credenciais, deploy e nível de testes. Cada pergunta traz uma opção recomendada. O que o prompt ou o projeto já respondem não é perguntado de novo.
+2. **Plano** curto (modo `lite`) ou mesa-redonda completa (modo `full`).
+3. **Construção por fatias verticais** (dados → API → tela → teste), com build e testes a cada fatia.
+4. **Verificação real:** `run_checks`, auditorias mecânicas e revisão no browser.
+5. **Entrega:** como rodar, o que passou/falhou e **o que ainda depende de você** (chaves, contas, aprovações).
 
-- Dashboards e SaaS privados incluem autenticação real, sessão e autorização no servidor, salvo requisito explícito diferente.
-- O frontend consome contratos reais do backend; sem dados, apresenta estado vazio em vez de conteúdo inventado.
-- O Designer define identidade visual; Design System registra o contrato implementável em `.agentes/design/DESIGN.md`.
-- Frontend Reviewer inspeciona a UI no browser e registra screenshots, console e requests. QA mantém os testes funcionais e de integração.
-- Pesquisa, implementação e testes só são marcados como feitos quando houver evidência.
+| Modo | Quando | Equipe | Fecha com |
+|---|---|---|---|
+| `lite` (padrão para "crie...") | App novo / feature grande | Arquiteto, Construtor, Verificador | `run_checks` + `audit_code_delivery` + um crítico |
+| `full` | Pedido explícito de mesa-redonda | 11 especialistas + 2 críticos + `@Finalizer` | Gate independente do Finalizer |
+| `audit` | Projeto existente, sem construir | Especialistas relevantes | Roadmap priorizado |
 
-## Fonte única e instalação
+Referências da skill: `references/intake.md` (perguntas), `references/stacks.md` (perfis e comandos por stack, incluindo Supabase), `references/domain-packs.md` (como acoplar conhecimento de um nicho sem poluir a skill).
 
-`.antigravity/` é a única fonte versionada deste repositório: agentes, regras, skills, comandos e templates ficam agrupados ali. Os instaladores distribuem essa fonte para `.agents/` no projeto-alvo, que é o layout nativo consumido pelo Antigravity. `.agentes/` é criado no produto para pesquisa, roadmap e relatórios; não é cópia da configuração da skill.
+## Instalação
 
-### Windows / PowerShell
+### Claude Code (recomendado: leve, ~3 MB)
 
 ```powershell
-.\install.ps1
+python install_claude.py --project C:\Projetos\MinhaApp     # .claude/ no projeto
+python install_claude.py --global                           # ~/.claude/
+python install_claude.py --project C:\Projetos\MinhaApp --with-heavy-skills   # + taste-skill e playwright-cli (~100 MB)
+```
+
+Instala 8 skills leves, os 14 agentes convertidos (a descrição de cada um restringe o uso ao fluxo da skill, então eles não disparam sozinhos) e o servidor MCP **sem registrá-lo**. O MCP é opcional; ative-o só no projeto que precisar, dentro dele:
+
+```powershell
+claude mcp add squad --scope local -- python <caminho>/.claude/mcp/server.py
+```
+(ou use `--register-mcp` junto de `--project`).
+
+### Antigravity
+
+```powershell
+.\install.ps1                              # menu
 .\install.ps1 -TargetProject "C:\Projetos\MinhaApp"
 .\install.ps1 -Global
 ```
-
-### Linux / macOS / WSL
-
 ```bash
-chmod +x install.sh
-./install.sh
-./install.sh "/caminho/do/projeto"
-./install.sh --global
+./install.sh "/caminho/do/projeto"   # ou --global
 ```
 
-Instalação global publica agentes, regras, comandos e skills em `~/.gemini/config/` e mantém a skill principal no caminho legado do CLI. Reabra ou recarregue o Antigravity após instalar.
+Instala em `.agents/` (projeto) ou `~/.gemini/config/` (global). **A regra `squad-context.md` agora é `trigger: manual`**: não é mais aplicada a prompts comuns. Recarregue o Antigravity após instalar.
 
-## MCP server
+## MCP server (opcional)
 
-Os instaladores também distribuem o servidor stdio em `.agents/mcp/server.py` no projeto-alvo (ou em `~/.gemini/config/mcp/server.py` na instalação global). Ele não depende de pacotes externos e requer Python 3.10 ou mais recente. Configure o cliente MCP para iniciar o processo com o caminho instalado, por exemplo:
+Servidor stdio em Python 3.10+, sem dependências. Sem ele a skill funciona (usa shell e leitura direta). Com ele:
 
-```json
-{
-  "mcpServers": {
-    "antigravity-squad": {
-      "command": "python",
-      "args": ["C:/Projetos/MinhaApp/.agents/mcp/server.py"]
-    }
-  }
-}
-```
+| Ferramenta | Função |
+|---|---|
+| `run_checks` | **Roda build e testes reais** (dotnet, npm/pnpm/yarn, pytest, go, cargo), devolve status/exit code/saída e grava `.squad/evidencias/run_checks.md`. Só comandos conhecidos; `install=true` instala dependências Node ausentes. |
+| `inspect_project` | Inventário, stack detectada, persistência (PostgreSQL, Supabase, SQLite...), autenticação, configs, jargão na UI e o `stack.md` declarado. |
+| `audit_code_delivery` | Varredura mecânica: latência simulada, IDs falsos, KPIs digitados no JSX, mocks embutidos, `catch` vazio, `Thread.Sleep`. Ignora arquivos de teste. |
+| `audit_security_controls` | Rotas de mutação sem `[Authorize]`, testes de segurança ausentes, credenciais sem criptografia. |
+| `audit_frontend_taste` | Clichês de IA, cores arbitrárias, `prefers-reduced-motion`. |
+| `get_design_reference` | Catálogo local de 84 `DESIGN.md` de referência. |
+| `run_playwright_cli` | Playwright CLI (comandos permitidos fixos, URL apenas http/https). |
+| `initialize_squad_docs`, `update_agent_report`, `update_roadmap`, `validate_squad_artifacts`, `validate_completion_checklist` | Artefatos e gate de conclusão em `.squad/`. |
 
-Em Linux/macOS, use `python3` e o caminho POSIX equivalente. Na instalação global, substitua o caminho por `~/.gemini/config/mcp/server.py`. Reinicie o cliente MCP para carregar o servidor.
-
-As ferramentas são:
-- `inspect_project`: Realiza auditoria arquitetural profunda: detecta persistência real (PostgreSQL, SQLite, Docker, migrations) alertando sobre estado em memória; audita autenticação e criptografia; checa configurações de credenciais (.env, appsettings); e escaneia o frontend contra vazamentos de jargão de dev na UI.
-- `audit_code_delivery`: Audita o código-fonte mecanicamente contra trapaças: timers simulados (`setTimeout`), IDs falsos (`Math.random`), métricas inventadas na UI (fake KPIs / AI slop), empty catch e bloqueios síncronos, municiando os dois críticos de código (`code_critic_blind` e `code_critic_spec`).
-- `audit_security_controls`: Audita controles do AppSec: proteção de rotas com autenticação/JWT, testes de segurança automatizados (SSRF, Auth, BOLA) e criptografia de credenciais de terceiros com AES-256/DataProtection.
-- `get_design_reference`: Consulta localmente o catálogo completo de 84 sistemas de design de referência (`awesome-design-md`) como Linear, Stripe, Supabase, Vercel e Apple para extração de tokens e contratos visuais.
-- `audit_frontend_taste`: Audita a interface contra clichês de IA e anti-patterns de design (`taste-skill`): detecta textos de marketing genéricos ("supercharge your", "next-gen"), classes Tailwind hexadecimais soltas, layouts monótonos e falta de acessibilidade `prefers-reduced-motion`.
-- `run_playwright_cli`: Executa comandos de navegador real via `playwright-cli` (snapshot, screenshot, console, requests, resize) para capturar evidências de tela e requisições de rede salvando em `.squad/evidencias/frontend/`.
-- `initialize_squad_docs`, `update_agent_report`, `update_roadmap` e `validate_squad_artifacts`: Gerenciam e validam a integridade de artefatos na pasta padrão unificada `.squad/` (ou `.agentes/`).
-
-O MCP automatiza inspeção, pesquisa visual, execução de browser e manutenção de artefatos; não executa os onze agentes nem simula subagentes. A skill continua orientando processo, critérios, papéis e limites.
+As auditorias são heurísticas: tratam-se como pistas e confirmam-se lendo o código. O MCP não executa agentes nem simula subagentes.
 
 ## Estrutura
 
 ```text
-.antigravity/
-├── mcp/                    # servidor MCP stdio sem dependências externas
-├── agents/                 # onze perfis de agente + dois críticos adversariais
-├── commands/               # alias /teamwork
-├── rules/                  # contexto e limites compartilhados
-└── skills/                 # skills instaladas e catálogos integrados
-    ├── design-reference/       # awesome-design-md (84 benchmarks reais)
-    ├── design-taste-frontend/  # taste-skill (heurísticas, scripts, assets)
-    ├── playwright-cli/         # Microsoft Playwright CLI (scripts e referências)
-    └── antigravity-squad/      # skill orquestradora
+squad-kit/                 # única fonte versionada
+├── mcp/server.py             # servidor MCP (opcional)
+├── agents/                   # 11 especialistas + 2 críticos + finalizer
+├── commands/                 # alias /teamwork
+├── rules/                    # squad-context.md (trigger: manual)
+└── skills/
+    ├── squad/    # SKILL.md + references/ (intake, stacks, domain-packs) + templates/
+    ├── design-reference/     # catálogo awesome-design-md
+    ├── design-taste-frontend/, taste-skill/, playwright-cli/   # pesados, opcionais
+    └── product-research, product-brand-design, quality-validation, security-validation, frontend-integration, spatial-design
+install.ps1 / install.sh      # Antigravity
+install_claude.py             # Claude Code
 ```
 
-## Métodos de frontend integrados
-
-1. **Awesome DESIGN.md (`design-reference`):**
-   Catálogo local com 84 referências consagradas de mercado (Linear, Stripe, Vercel, Supabase, Apple, Airbnb, Shopify). O agente `design_system` consulta diretamente via `get_design_reference` para estruturar tokens semânticos e tipografia sem alucinações.
-2. **Taste-Skill (`design-taste-frontend`):**
-   Metodologia completa de direção de arte sem "AI slop". Fornece scripts de validação de consistência, lint de copy e ferramentas automatizadas via `audit_frontend_taste`.
-3. **Microsoft Playwright CLI (`playwright-cli`):**
-   Runtime headless e interativo empacotado para o agente `frontend_reviewer` rodar testes visuais em desktop (1440px) e mobile (390px), salvar capturas de tela e auditar chamadas de rede reais via `run_playwright_cli`.
+Documentação de trabalho do produto fica em `.squad/` no projeto-alvo (relatórios, `stack.md`, roadmap, evidências); `.agents/` é configuração do Antigravity.
 
 ## Créditos e licenças de terceiros
 
-| Projeto | Como é usado aqui | Licença upstream |
+| Projeto | Uso | Licença |
 |---|---|---|
-| [VoltAgent/awesome-design-md](https://github.com/voltagent/awesome-design-md) | Catálogo completo de 84 arquivos `DESIGN.md` para benchmarking e extração de contratos visuais via MCP e skill. | [MIT](https://github.com/voltagent/awesome-design-md/blob/main/LICENSE) |
-| [leonxlnx/taste-skill](https://github.com/leonxlnx/taste-skill) | Direção de arte, heurísticas anti-slop, assets, scripts de consistência e auditoria de taste no MCP. | [MIT](https://github.com/leonxlnx/taste-skill/blob/main/LICENSE) |
-| [Microsoft Playwright CLI](https://github.com/microsoft/playwright-cli) | CLI de automação de browser empacotada para inspeção visual responsiva, console logs e captura de requests. | [Apache-2.0](https://github.com/microsoft/playwright-cli/blob/main/LICENSE) |
+| [VoltAgent/awesome-design-md](https://github.com/voltagent/awesome-design-md) | Catálogo de 84 `DESIGN.md` | [MIT](https://github.com/voltagent/awesome-design-md/blob/main/LICENSE) |
+| [leonxlnx/taste-skill](https://github.com/leonxlnx/taste-skill) | Direção de arte e heurísticas anti-slop | [MIT](https://github.com/leonxlnx/taste-skill/blob/main/LICENSE) |
+| [Microsoft Playwright CLI](https://github.com/microsoft/playwright-cli) | Inspeção de browser | [Apache-2.0](https://github.com/microsoft/playwright-cli/blob/main/LICENSE) |
 
-O [LICENSE](LICENSE) na raiz cobre o conteúdo original deste repositório. Os projetos e materiais de terceiros permanecem sob suas respectivas licenças.
+O [LICENSE](LICENSE) cobre o conteúdo original deste repositório; materiais de terceiros mantêm suas licenças.
 
 ## Licença
 
-MIT. Consulte [LICENSE](LICENSE).
-
-## Gate de conclusão independente
-
-O fluxo de execução termina com `@Finalizer`, agente independente que preenche `qualidade/finalizer.md` e valida o aceite usando `validate_completion_checklist`. O gate exige evidências para inventário real (incluindo client separado versus UI embutida), integração browser/API first-party, banco e schema/migrations, logs/exceções, build, testes unitários e de integração, e fluxos de browser. Testes registram comando e resultado; unitários não provam integração. SQL Server LocalDB e acesso pelo Visual Studio só são aplicáveis a .NET no Windows. Lacunas bloqueiam conclusão e devem virar tarefas no roadmap.
-
-The MCP exposes `validate_completion_checklist(project_root)` for the mandatory finalizer gate. It returns each checklist status/evidence, project inventory and platform applicability, and blocks approval for missing rows, unsupported N/A, failed checks, integration claims without integration evidence, browser checks without actual HTTP evidence, or test claims without command and result.
+MIT.

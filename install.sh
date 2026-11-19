@@ -2,11 +2,11 @@
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source_dir="$script_dir/.antigravity"
+source_dir="$script_dir/squad-kit"
 kinds=(agents rules skills commands mcp)
 
 if [[ ! -d "$source_dir" ]]; then
-  echo "Erro: pasta fonte .antigravity não encontrada em $script_dir" >&2
+  echo "Erro: pasta fonte squad-kit não encontrada em $script_dir" >&2
   exit 1
 fi
 
@@ -19,10 +19,10 @@ copy_squad_to() {
       cp -R "$source_dir/$kind/." "$destination_root/$kind/"
     fi
   done
-  local skill_dir="$destination_root/skills/antigravity-squad"
+  local skill_dir="$destination_root/skills/squad"
   mkdir -p "$skill_dir/templates"
-  cp "$source_dir/skills/antigravity-squad/SKILL.md" "$skill_dir/"
-  cp -R "$source_dir/skills/antigravity-squad/templates/." "$skill_dir/templates/"
+  cp "$source_dir/skills/squad/SKILL.md" "$skill_dir/"
+  cp -R "$source_dir/skills/squad/templates/." "$skill_dir/templates/"
 }
 
 install_global() {
@@ -65,11 +65,11 @@ copy_squad_to "$target_project/.agents"
 gitignore_path="$target_project/.gitignore"
 if [[ -f "$gitignore_path" ]]; then
   if ! grep -q "\.squad" "$gitignore_path"; then
-    printf "\n# Antigravity Squad artifacts\n.squad/\n.agentes/\n" >> "$gitignore_path"
+    printf "\n# Squad artifacts\n.squad/\n.agentes/\n" >> "$gitignore_path"
     echo "Adicionado .squad/ ao .gitignore de $target_project"
   fi
 fi
 
 echo "Squad instalado no workspace: $target_project/.agents"
-echo "Reabra ou recarregue o Antigravity e invoque /antigravity-squad."
+echo "Reabra ou recarregue o Antigravity e invoque /squad."
 echo "MCP server: python3 '$target_project/.agents/mcp/server.py' (stdio)"
